@@ -4,10 +4,12 @@ Avtor: Andraž Pirnovar
 
 Repozitorij z gradivi pri predmetu APPR v študijskem letu 2015/16.
 
-## Tematika
+## Analiza delovnih mest v Sloveniji
 
-Izbrali si boste temo, s katero se bo vaš projekt ukvarjal. Tukaj boste
-napisali, kje ste dobili podatke, ter kakšen je vaš cilj.
+Ker je v današnjih časih velik problem zaposlitev, sploh za nas, mlade, bom analiziral, na katerih področjih gospodarstva je največ prostih delovnih mest, v katerem sektorju je največ zaposlenih, ter kakšna je zaposlenost po regijah.
+
+Večino virov bom pridobil iz Statističnega urada republike Slovenije, bodo pa v oblikah .csv , .xml.
+http://pxweb.stat.si/pxweb/Database/Dem_soc/07_trg_dela/30_07146_prosta_mesta/30_07146_prosta_mesta.asp
 
 ## Program
 
