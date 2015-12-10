@@ -4,12 +4,13 @@ Avtor: Andraž Pirnovar
 
 Repozitorij z gradivi pri predmetu APPR v študijskem letu 2015/16.
 
-## Analiza delovnih mest v Sloveniji
+## Analiza plač v ZDA
 
-Ker je v današnjih časih velik problem zaposlitev, sploh za nas, mlade, bom analiziral, na katerih področjih gospodarstva je največ prostih delovnih mest, v katerem sektorju je največ zaposlenih, ter kakšna je zaposlenost po regijah.
+Analiziral bom plače v Združenih državah Amerike, kateri poklici so najboljse plačani, v kateri zvezni državi je najbolje živeti glede na povprečno plačo ter diplomiranci katerih Ameriških univerz zaslužijo največ po končanem študiju.
 
-Večino virov bom pridobil iz Statističnega urada republike Slovenije, bodo pa v oblikah .csv , .xml.
-http://pxweb.stat.si/pxweb/Database/Dem_soc/07_trg_dela/30_07146_prosta_mesta/30_07146_prosta_mesta.asp
+Podatke bom večinoma pridobil iz Ameriškega statističnega urada (Bureau of labor statistics).
+http://www.bls.gov/oes/#data
+Datoteke bodo oblike .xlsx, ter HTML (oz XML).
 
 ## Program
 
