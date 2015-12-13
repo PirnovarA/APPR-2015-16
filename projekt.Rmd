@@ -19,7 +19,7 @@ source("lib/libraries.r", encoding = "UTF-8")
 
 # Izbira teme
 
-Za vzorec bomo prikazali nekaj podatkov o slovenskih občinah.
+Analiza plač v ZDA. Zanima me, kateri poklici zaslužijo največ, ter kateri najmanj. Zanima me tudi, v kateri zvezni državi je najugodneje živeti, glede na povprečni dohodek na prebivalca in povprečni dohodek na gospodinjstvo ter družino. Imel bom tudi primerjavo povprečnih plač v zveznih državah po letih.
 
 ***
 

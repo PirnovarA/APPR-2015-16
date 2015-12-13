@@ -10,7 +10,7 @@ Analiziral bom plače v Združenih državah Amerike, kateri poklici so najboljse
 
 Podatke bom večinoma pridobil iz Ameriškega statističnega urada (Bureau of labor statistics).
 http://www.bls.gov/oes/#data
-Datoteke bodo oblike .xlsx, ter HTML (oz XML).
+Datoteke bodo oblike .csv, ter HTML (oz XML).
 
 ## Program
 
