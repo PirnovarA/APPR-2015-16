@@ -6,7 +6,7 @@ Repozitorij z gradivi pri predmetu APPR v študijskem letu 2015/16.
 
 ## Analiza plač v ZDA
 
-Analiziral bom plače v Združenih državah Amerike, kateri poklici so najboljse plačani, v kateri zvezni državi je najbolje živeti glede na povprečno plačo ter diplomiranci katerih Ameriških univerz zaslužijo največ po končanem študiju.
+Analiziral bom plače v Združenih državah Amerike, kateri poklici so najboljse plačani, v kateri zvezni državi je najbolje živeti glede na povprečno plačo ter kako se je ta spreminjala skozi leta.
 
 Podatke bom večinoma pridobil iz Ameriškega statističnega urada (Bureau of labor statistics).
 http://www.bls.gov/oes/#data

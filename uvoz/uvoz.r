@@ -35,7 +35,7 @@ national[2:14] <- lapply(national[2:14], function(x) as.numeric(gsub("[,]",".",x
 #Uvoz tabele s povprečnim prihodkom na državljana v zveznih državah
 
 u= "http://www.infoplease.com/ipa/A0104652.html"
-kategorije=c("State", 1980, 1990, 1995, 2000, 2003, 2006, 2009, 2012)  #Imena stolpcev
+kategorije=as.character(c("State", 1980, 1990, 1995, 2000, 2003, 2006, 2009, 2012))  #Imena stolpcev
 tables = readHTMLTable(u, fileEncoding="UTF-8")   #Prebral HTML tabelce
 
 per_capita= tables[[2]] #Izbral ta pravo tabelo
@@ -71,3 +71,4 @@ per_capita2[indx] <- lapply(per_capita2[indx], function(x) as.numeric(gsub("[,$]
 ############################################################################
 
 source("uvoz/uredi.r", encoding = "UTF-8")
+source("uvoz/grafi.r", encoding = "UTF-8")
