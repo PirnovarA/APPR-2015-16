@@ -25,7 +25,7 @@ Analiza plač v ZDA. Zanima me, kateri poklici zaslužijo največ, ter kateri na
 
 # Obdelava, uvoz in čiščenje podatkov
 
-```{r uvoz, echo=FALSE}
+```{r uvoz, echo=FALSE, message=FALSE}
 source("uvoz/uvoz.r", encoding = "UTF-8")
 ```
 
@@ -35,13 +35,13 @@ Druge podatke, o povprečnih plačah v zveznih državah, sem pridobil v obliki H
 Tabeli nationalh in nationala predstavljata urno in letno plačo po poklicu. Med sabo se ločita edino po temu, da so v eni urne plače. v drugi pa letne. V prvem stolpcu so poklici iz ZDA, v naslednjih pa njihove pripadajoče plače. V stolpcu mean je povprečna plača, naprej pa so plače po percentilih.
 
 ```{r razpredelnice}
-head(national_h)
+kable(head(national_h))
 head(per_capita2)
 ```
 
-Slika \ref{fig:histogram} prikazuje porazdelitev števila naselij v občinah.
+Slika \ref{fig:lineplot} prikazuje porazdelitev števila naselij v občinah.
 
-```{r histogram, echo=FALSE, fig.align='center', fig.cap='Graf 5ih najbolj plačanih zveznih držav in 5ih najmanj plačanih zveznih držav'}
+```{r lineplot, echo=TRUE, fig.align='center', fig.cap='Graf 5ih najbolj plačanih zveznih držav in 5ih najmanj plačanih zveznih držav'}
 
 graf_top_5
 
