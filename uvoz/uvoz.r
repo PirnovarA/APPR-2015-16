@@ -14,7 +14,6 @@ national <- read.csv2("podatki/national_2014.csv",
 #Poimenoval vrstice
 national <- (subset(national, select = -c(OCC_CODE,OCC_GROUP,HOURLY,ANNUAL,EMP_PRSE,MEAN_PRSE)))
 national <- national[!duplicated(national$Occupation),]
-#national <- (data.frame(national[,-1], row.names=national[,1]))[-1,]
 
 #  # pomeni, da je urna placa>90$ oz letna>187200$ ... Za prakticne namene spremenimo to v stevilke
 urne.place <- names(national)[match("H_PCT10",names(national)):match("H_PCT90",names(national))]
@@ -30,7 +29,6 @@ national[] <- lapply(national[], function(x) (gsub("[*]","",x)))
 national[] <- lapply(national[], function(x) (gsub("[.]","",x)))
 national[2:14] <- lapply(national[2:14], function(x) as.numeric(gsub("[,]",".",x)))
 
-#write.csv2(national, "podatki/national.csv", fileEncoding = "UTF-8", row.names = FALSE)
 ##############################################################################
 #Uvoz tabele s povprečnim prihodkom na državljana v zveznih državah
 
@@ -39,7 +37,6 @@ kategorije=as.character(c("State", 1980, 1990, 1995, 2000, 2003, 2006, 2009, 201
 tables = readHTMLTable(u, fileEncoding="UTF-8")   #Prebral HTML tabelce
 
 per_capita= tables[[2]] #Izbral ta pravo tabelo
-#per_capita <- (data.frame(per_capita[,-1], row.names=per_capita[,1]))[-1,] #Poimenovanje vrstic, odstranil prvo vrstico, ker jo nadomestim z imensko
 colnames(per_capita) <- kategorije #Poimenovanje stolpcev
 per_capita <- per_capita[complete.cases(per_capita[,length(names(per_capita))]),][-1,]
 
@@ -49,7 +46,6 @@ indx <- sapply(per_capita, is.factor)
 per_capita[indx] <- lapply(per_capita[indx], function(x) as.numeric(gsub("[,$]", "", x)))
 per_capita <- replace(per_capita,per_capita=="DC","Washington, D.C.")  #Zamenjam ime zv. države
 
-#write.csv2(per_capita, "podatki/per_capita.csv", fileEncoding = "UTF-8", row.names = FALSE)
 ###########################################################################
 #Uvoz tabele s povprecnim prihodkom na državljana v ZDA
 
@@ -60,14 +56,12 @@ per_capita2 = tables[[3]]
 kategorije <- c(names(per_capita2))[-1] #Imena stolpcev, odstranil prvo kategorijo, ker bo 1. stolpec izbrisan
 kategorije <- lapply(kategorije, function(x) (gsub("[\n]"," ", x)))  #Znebil se obveznih prelomov vrstic
 per_capita2 <- per_capita2[,-1] #Odstranimo brezvezni stolpec kategorij
-#per_capita2 <- data.frame(per_capita2[,-1], row.names = per_capita2[,1]) #Damo imena vrsticam, imenujemo po prvem stolpcu
-colnames(per_capita2) <- kategorije   #Prejšnje poimenovanje pokvari imena stolpcev, sedaj jih popravimo
+colnames(per_capita2) <- kategorije   #Prejšnje poimenovanje je imelo obvezni prelom vrstic, to smo sedaj odstranili
 #Odstranim dolarje, , nadomestim s . in spremenim v numeric
 per_capita2$State <- sapply(per_capita2$State, function(x) as.character(gsub("[$]", "",x)))
 indx <- sapply(per_capita2, is.factor) 
 per_capita2[indx] <- lapply(per_capita2[indx], function(x) as.numeric(gsub("[,$]", "", x)))
 
-#write.csv2(per_capita2, "podatki/per_capita2.csv", fileEncoding = "UTF-8", row.names = FALSE)
 ############################################################################
 
 source("uvoz/uredi.r", encoding = "UTF-8")

@@ -32,24 +32,55 @@ source("uvoz/uvoz.r", encoding = "UTF-8")
 Uvozil sem podatke z Ameriškega statističnega urada (http://www.bls.gov/bls/proghome.htm) v .CSV obliki. To sem ločil na prikaz urnih ter letnih plač ter število zaposlenih v posameznem poklicu.
 Druge podatke, o povprečnih plačah v zveznih državah, sem pridobil v obliki HTML in sicer iz Wikipedije in spletne strani infoplease.
 
-Tabeli nationalh in nationala predstavljata urno in letno plačo po poklicu. Med sabo se ločita edino po temu, da so v eni urne plače. v drugi pa letne. V prvem stolpcu so poklici iz ZDA, v naslednjih pa njihove pripadajoče plače. V stolpcu mean je povprečna plača, naprej pa so plače po percentilih.
+### National
+
+Tabelo national (dobljeno iz statističnega urada, v .csv obliki) sem razdelil na 2 tabeli, ki predstavljata urno in letno plačo po poklicu. Med seboj se ločita edino po temu, da so v eni urne plače. v drugi pa letne. V prvem stolpcu so poklici iz ZDA, v naslednjih pa njihove pripadajoče plače. V stolpcu mean je povprečna plača, naprej pa so plače po percentilih.
+Iz njiju sem odstranil, in dal v posamezno tabelo, podatke o številu zaposlenih na določenem delovnem mestu. Tabela national_a ima 1115 vrstic in 8 stolpcev, national_h pa ima 1043 vrstice in prav tako 7 stolpcev.
+
+Ker so nekatere plače podane le letno, druge pa le urno (v tabelah označeno z *), sem te vrstice odstranil iz tabele, ker so sedaj, ko sta tabeli ločeni, prikazovale neuporabne podatke.
+
+V obeh tabelah so bili tudi poklici, ki so urno oz. letno zaslužili več kot 90 USD/uro oz. 187200 USD/leto. Te vrednosti so bile označene z #. Čeprav so bila že napisana povprečja izračunana s pomočjo realnih vrednosti, sem, zaradi prikazovanja in analize, te vrednosti spremenil
 
 ```{r national_razp, echo=FALSE}
 kable(head(national_h))
 ```
 
-Slika \ref{fig:lineplot} prikazuje porazdelitev števila naselij v občinah.
+\pagebreak
 
-```{r per_capita2_razp, echo=FALSE}
+### Per_capita2
+
+Tabela per_capita2 (dobljena iz Wikipedije v HTML) prikazuje primerjavo med zveznimi državami glede na zaslužek per capita, povprečnim dohodkom gospodinjstva in dohodkom družine, zraven pa so še podatki o št. prebivalcev v državi in številu gospodinjstev.
+Te tabele nisem kaj preveč urejal, razen, da sem spremenil vrednosti v "numeric", odstranil simbole in vejice, ipd.
+
+
+```{r percapita2, echo=FALSE}
 kable(head(per_capita2))
 ```
 
-Slika \ref{fig:lineplot} prikazuje porazdelitev števila naselij v občinah.
+### Per_capita
 
-```{r lineplot, fig.align='center',, echo=FALSE, fig.cap='Graf 5ih najbolj plačanih zveznih držav in 5ih najmanj plačanih zveznih držav'}
+Tabela per_capita prikazuje, že spet, zvezne države, urejene po povprečnih plačah. A tokrat imamo plače za več različnih let, prirejene inflaciji. Tabelo sem prav tako dobil iz interneta, v obliki HTML. 
+
+```{r percapita, echo=FALSE}
+kable(head(per_capita))
+```
+
+Da sem lahko narisal graf, sem rabil tabelo per_capita preoblikovati v R-u bolj všečni format.
+
+```{r percapitat, echo=FALSE}
+kable(head(top_5))
+```
+
+\pagebreak
+
+```{r lineplot, fig.align='center', echo=FALSE, fig.cap='Graf 5ih najbolj plačanih zveznih držav in 5ih najmanj plačanih zveznih držav'}
 
 graf_top_5
 
 ```
+
+V tretji fazi bom poskusil narediti povezavo med plačo in življenskim standardom v posamezni zvezni državi.
+Prav tako bom preizkusil mojo predpostavko, da je bolje plačanih poklicev manj.
+Največji del tretje faze bom namenil izdelavi grafov in zemljevidov.
 
 ***
