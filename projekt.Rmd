@@ -34,13 +34,13 @@ Druge podatke, o povprečnih plačah v zveznih državah, sem pridobil v obliki H
 
 Tabeli nationalh in nationala predstavljata urno in letno plačo po poklicu. Med sabo se ločita edino po temu, da so v eni urne plače. v drugi pa letne. V prvem stolpcu so poklici iz ZDA, v naslednjih pa njihove pripadajoče plače. V stolpcu mean je povprečna plača, naprej pa so plače po percentilih.
 
-```{r razpredelnice, echo=FALSE}
+```{r national_razp, echo=FALSE}
 kable(head(national_h))
 ```
 
 Slika \ref{fig:lineplot} prikazuje porazdelitev števila naselij v občinah.
 
-```{r razpredelnice, echo=FALSE}
+```{r per_capita2_razp, echo=FALSE}
 kable(head(per_capita2))
 ```
 
