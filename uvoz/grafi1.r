@@ -16,7 +16,7 @@ top_5 = melt(top_5,id=row.names(top_5))
 graf_top_5 <- ggplot(top_5, main="Growth of per capita income through the years") + aes(x=Var1, y = value ,colour=Var2) +
   geom_line() + xlab("Year") + ylab("$ per capita") + geom_point() +
   guides(color = guide_legend(title = "State"))
-######################################################################################
+########################################################################################
 
 national_a1= arrange((merge(national_a,employment)),
                      desc(Annual_mean), desc(Annual_median), desc(A_PCT10))

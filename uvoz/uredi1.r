@@ -11,7 +11,7 @@ national_h <- arrange(national_h, desc(Hourly_mean), desc(Hourly_median), desc(H
 national_a <- arrange(national_a, desc(Annual_mean), desc(Annual_median), desc(A_PCT10))
 employment <- arrange(employment, desc(Total_employment))
 
-##################################################################################
+####################################################################################
 
 #Tabelco per_capita priredimo za inflacijo, da bomo lahko primerjali vrednosti skozi leta med sabo(NPV bo v 2015)
 inflacije = c(2.880,1.816,1.557,1.378,1.290,1.177,1.106,1.034)
