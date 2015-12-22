@@ -34,55 +34,22 @@ Druge podatke, o povprečnih plačah v zveznih državah, sem pridobil v obliki H
 
 Tabeli nationalh in nationala predstavljata urno in letno plačo po poklicu. Med sabo se ločita edino po temu, da so v eni urne plače. v drugi pa letne. V prvem stolpcu so poklici iz ZDA, v naslednjih pa njihove pripadajoče plače. V stolpcu mean je povprečna plača, naprej pa so plače po percentilih.
 
-```{r razpredelnice}
+```{r razpredelnice, echo=FALSE}
 kable(head(national_h))
-head(per_capita2)
 ```
 
 Slika \ref{fig:lineplot} prikazuje porazdelitev števila naselij v občinah.
 
-```{r lineplot, echo=TRUE, fig.align='center', fig.cap='Graf 5ih najbolj plačanih zveznih držav in 5ih najmanj plačanih zveznih držav'}
+```{r razpredelnice, echo=FALSE}
+kable(head(per_capita2))
+```
+
+Slika \ref{fig:lineplot} prikazuje porazdelitev števila naselij v občinah.
+
+```{r lineplot, fig.align='center',, echo=FALSE, fig.cap='Graf 5ih najbolj plačanih zveznih držav in 5ih najmanj plačanih zveznih držav'}
 
 graf_top_5
 
-```
-
-***
-
-# Analiza in vizualizacija podatkov
-
-```{r vizualizacija, echo=FALSE}
-source("vizualizacija/vizualizacija.r", encoding = "UTF-8")
-```
-
-Slika \ref{fig:zemljevid} prikazuje povprečno velikost družine za vsako občino.
-
-```{r zemljevid, echo=FALSE, fig.align='center', fig.cap='Zemljevid povprečnega števila otrok v družini'}
-n <- 100
-barve <- topo.colors(n)[1+(n-1)*(druzine$povprecje-min.povprecje)/(max.povprecje-min.povprecje)]
-plot(zemljevid, col = barve)
-title("Povprečno število otrok v družini")
-```
-
-***
-
-# Napredna analiza podatkov
-
-```{r analiza, echo=FALSE}
-source("analiza/analiza.r", encoding = "UTF-8")
-```
-
-Slika \ref{fig:graf} prikazuje povezavo med številom naselij in površino občine.
-
-```{r graf, echo=FALSE, fig.align='center', fig.cap='Povezava med številom naselij in površino občine'}
-plot(obcine[[1]], obcine[[4]],
-     main = "Število naselij glede na površino občine",
-     xlab = expression("Površina (km"^2 * ")"),
-     ylab = "Št. naselij",
-     col = barve[obcine[[7]]],
-     pch = 18)
-legend("topright", legend = names(barve), col = barve,
-       pch = 18, cex = 0.5, bg = "white")
 ```
 
 ***

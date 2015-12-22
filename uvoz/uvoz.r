@@ -24,7 +24,7 @@ letne.place <- names(national)[match("A_PCT10",names(national)):match("A_PCT90",
 national[letne.place] <- lapply(national[letne.place], function(x) (gsub("[#]", "187200", x)))
 
 # * pomeni, da podatki niso bili na voljo ali pa poklici,ki so plačani letno, ne na uro. * bomo spremenili v NA
-national[] <- lapply(national[], function(x) (gsub("[*]","NA",x)))
+national[] <- lapply(national[], function(x) (gsub("[*]","",x)))
 
 # Sedaj odstranimo . in spremenimo vejice v decimalne pike, hkrati pa stolpce spremenimo v numeric
 national[] <- lapply(national[], function(x) (gsub("[.]","",x)))
