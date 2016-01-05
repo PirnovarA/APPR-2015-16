@@ -19,7 +19,7 @@ source("lib/libraries.r", encoding = "UTF-8")
 
 # Izbira teme
 
-Analiza plač v ZDA. Zanima me, kateri poklici zaslužijo največ, ter kateri najmanj. Zanima me tudi, v kateri zvezni državi je najugodneje živeti, glede na povprečni dohodek na prebivalca in povprečni dohodek na gospodinjstvo ter družino. Imel bom tudi primerjavo povprečnih plač v zveznih državah po letih.
+Analiza plač v ZDA. Zanima me, kateri poklici zaslužijo največ, ter kateri najmanj. Zanima me tudi, v kateri zvezni državi je najugodneje živeti, glede na povprečni dohodek na prebivalca in povprečni dohodek na gospodinjstvo ter družino. Imel bom tudi primerjavo povprečnih plač v zveznih državah po letih.   
 
 ***
 
@@ -29,47 +29,85 @@ Analiza plač v ZDA. Zanima me, kateri poklici zaslužijo največ, ter kateri na
 source("uvoz/uvoz.r", encoding = "UTF-8")
 ```
 
-Uvozil sem podatke z Ameriškega statističnega urada (http://www.bls.gov/bls/proghome.htm) v .CSV obliki. To sem ločil na prikaz urnih ter letnih plač ter število zaposlenih v posameznem poklicu.
-Druge podatke, o povprečnih plačah v zveznih državah, sem pridobil v obliki HTML in sicer iz Wikipedije in spletne strani infoplease.
+Uvozil sem podatke z Ameriškega statističnega urada (http://www.bls.gov/bls/proghome.htm) v .CSV obliki. To sem ločil na prikaz urnih ter letnih plač ter število zaposlenih v posameznem poklicu.   
+Druge podatke, o povprečnih plačah v zveznih državah, sem pridobil v obliki HTML in sicer iz Wikipedije in spletne strani infoplease.   
+Vse podane plače so v $.   
 
-### National
+### National in state
 
-Tabelo national (dobljeno iz statističnega urada, v .csv obliki) sem razdelil na 2 tabeli, ki predstavljata urno in letno plačo po poklicu. Med seboj se ločita edino po temu, da so v eni urne plače. v drugi pa letne. V prvem stolpcu so poklici iz ZDA, v naslednjih pa njihove pripadajoče plače. V stolpcu mean je povprečna plača, naprej pa so plače po percentilih.
-Iz njiju sem odstranil, in dal v posamezno tabelo, podatke o številu zaposlenih na določenem delovnem mestu. Tabela national_a ima 1115 vrstic in 8 stolpcev, national_h pa ima 1043 vrstice in prav tako 7 stolpcev.
+Podatke sem pridobil za 14 let in sicer za vsaki dve leti (2014, 2012, 2012, 2010, 2008, 2006, 2004, 2002). Starejši podatki so se od novih razlikovali, predvsem v imenih stolpcev, prav tako pa tudi v predoločenih vredostih maksimalne plače. Kot sem kasneje, med urejanjem opazil, nisi vsi poklici, ali obstajali, ali bolj verjetno, niso bili popisani oz. dani v isto kategorijo, tako da bo med analizo in graficnim prikazom kdaj mogoce opaziti kaksno anomalijo, posledico danih podatkov.    
 
-Ker so nekatere plače podane le letno, druge pa le urno (v tabelah označeno z *), sem te vrstice odstranil iz tabele, ker so sedaj, ko sta tabeli ločeni, prikazovale neuporabne podatke.
+Iz vseh podatkov sem si izbral samo urne plače, ne pa tudi letnih, kajti razlike v rezultatih bi bile minimalne, če sploh. V svojo tabelo sem shranil tudi podatke o zaposlitvi (v povezavi s poklicem, letom in zvezno državo), da se ne bi ponavljali.   
 
-V obeh tabelah so bili tudi poklici, ki so urno oz. letno zaslužili več kot 90 USD/uro oz. 187200 USD/leto. Te vrednosti so bile označene z #. Čeprav so bila že napisana povprečja izračunana s pomočjo realnih vrednosti, sem, zaradi prikazovanja in analize, te vrednosti spremenil
+
+```{r state_razp, echo=FALSE}
+kable(head(state))
+```
+
+
+Stolpci v podatkih _state_ in _national_ pomenijo:
+
+1. __State__: Samo v podatkih "state", povejo zvezno državo pripadajočega poklica
+
+2. __Occupation__: Poklic, kateremu pripadajo vsi drugi podatki v vrstici
+
+3. __Hourly_mean__: Povprečna urna plača za ta poklic
+
+4. __H_PCT10 - H_PCT90__: Plača po percentilih, H_median je mediana (vse se seveda nanaša na urne plače)
+
+5. __Year__: Leto, v katerem so poklici imeli to plačo
+
+Podatki v tidy data pa zgledajo takole:   
 
 ```{r national_razp, echo=FALSE}
-kable(head(national_h))
+kable(head(national_tidy))
+
+kable(head(state_tidy))
 ```
+
+1. __State__: Pove zvezno državo, v kateri je poklic (samo pri tabeli state)
+
+2. __Occupation__: Poklic
+
+3. __Year__: Leto merjenja
+
+4. __Type__: Pove, kateri "tip" plače gledamo oz. katero meritev (povprečje, percentil) imamo
+
+5. __Wage__: Plača
 
 \pagebreak
 
 ### Per_capita2
 
-Tabela per_capita2 (dobljena iz Wikipedije v HTML) prikazuje primerjavo med zveznimi državami glede na zaslužek per capita, povprečnim dohodkom gospodinjstva in dohodkom družine, zraven pa so še podatki o št. prebivalcev v državi in številu gospodinjstev.
-Te tabele nisem kaj preveč urejal, razen, da sem spremenil vrednosti v "numeric", odstranil simbole in vejice, ipd.
+Tabela per_capita2 (dobljena iz Wikipedije v HTML) prikazuje primerjavo med zveznimi državami glede na zaslužek per capita, povprečnim dohodkom gospodinjstva in dohodkom družine, zraven pa so še podatki o št. prebivalcev v državi in številu gospodinjstev.  
+Te tabele nisem kaj preveč urejal, razen, da sem spremenil vrednosti v "numeric", odstranil simbole in vejice, ipd. in jo dal v obliko tidy data    
 
 
 ```{r percapita2, echo=FALSE}
-kable(head(per_capita2))
+kable(head(per_capita2_tidy))
 ```
+
+1. __State__: V kateri zvezni državi gledamo
+
+2. __Population__: Število prebivalcev v tisti zvezni državi
+
+3. __Number__ of households: Število gospodinjstev
+
+4. __Wage__: Povprečna plača v zvezni državi
 
 ### Per_capita
 
-Tabela per_capita prikazuje, že spet, zvezne države, urejene po povprečnih plačah. A tokrat imamo plače za več različnih let, prirejene inflaciji. Tabelo sem prav tako dobil iz interneta, v obliki HTML. 
+Tabela per_capita prikazuje, že spet, zvezne države, urejene po povprečnih plačah. A tokrat imamo plače za več različnih let, prirejene inflaciji. Tabelo sem prav tako dobil iz interneta, v obliki HTML. Sedaj je v obliki tidy data.   
 
 ```{r percapita, echo=FALSE}
-kable(head(per_capita))
+kable(head(per_capita_tidy))
 ```
 
-Da sem lahko narisal graf, sem rabil tabelo per_capita preoblikovati v R-u bolj všečni format.
+1. __State__: Gledana zvezna država
 
-```{r percapitat, echo=FALSE}
-kable(head(top_5))
-```
+2. __Year__: Leto meritev
+
+4. __Wage__: Povprečna plača v tisti zv. državi v tistem letu
 
 \pagebreak
 
@@ -79,8 +117,8 @@ graf_top_5
 
 ```
 
-V tretji fazi bom poskusil narediti povezavo med plačo in življenskim standardom v posamezni zvezni državi.
+V tretji fazi bom poskusil narediti povezavo med plačo in življenskim standardom v posamezni zvezni državi. Gledal bom tudi spreminjanje plače med najbolje in najslabše plačanimi poklici.
 Prav tako bom preizkusil mojo predpostavko, da je bolje plačanih poklicev manj.
-Največji del tretje faze bom namenil izdelavi grafov in zemljevidov.
+Največji del tretje faze bom namenil izdelavi grafov in zemljevidov.   
 
 ***
