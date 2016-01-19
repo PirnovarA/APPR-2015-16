@@ -2,11 +2,17 @@
 title: "Poročilo pri predmetu Analiza podatkov s programom R"
 author: "Andraž Pirnovar"
 output:
+  html_document: default
   pdf_document:
-    latex_engine: xelatex
     includes:
       in_header: lib/styles.sty
+    latex_engine: xelatex
+always_allow_html: yes
 ---
+
+```{r, echo=FALSE}
+type <- knitr::opts_knit$get("rmarkdown.pandoc.to")
+```
 
 ```{r setup, echo=FALSE, results='hide', message=FALSE}
 # Če želimo nastaviti pisave v PDF-ju, odkomentiramo
@@ -27,6 +33,7 @@ Analiza plač v ZDA. Zanima me, kateri poklici zaslužijo največ, ter kateri na
 
 ```{r uvoz, echo=FALSE, message=FALSE}
 source("uvoz/uvoz.r", encoding = "UTF-8")
+source("vizualizacija/vizualizacija.r", encoding = "UTF-8")
 ```
 
 Uvozil sem podatke z Ameriškega statističnega urada (http://www.bls.gov/bls/proghome.htm) v .CSV obliki. To sem ločil na prikaz urnih ter letnih plač ter število zaposlenih v posameznem poklicu.   
@@ -122,3 +129,10 @@ Prav tako bom preizkusil mojo predpostavko, da je bolje plačanih poklicev manj.
 Največji del tretje faze bom namenil izdelavi grafov in zemljevidov.   
 
 ***
+```{r povp_plača, echo=FALSE}
+switch (type,
+  latex = graf_state_tidy_mean,
+  html=test
+)
+        
+```        

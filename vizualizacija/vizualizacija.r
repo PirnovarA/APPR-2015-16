@@ -1,13 +1,18 @@
 # 3. faza: Izdelava zemljevida
-
+source("lib/uvozi.zemljevid.r",encoding="UTF-8")
 # Uvozimo zemljevid.
-zemljevid <- uvozi.zemljevid("http://e-prostor.gov.si/fileadmin/BREZPLACNI_POD/RPE/OB.zip",
-                             "OB/OB", encoding = "Windows-1250")
 
-# Preuredimo podatke, da jih bomo lahko izrisali na zemljevid.
-druzine <- preuredi(druzine, zemljevid, "OB_UIME", c("Ankaran", "Mirna"))
 
-# Izračunamo povprečno velikost družine.
-druzine$povprecje <- apply(druzine[1:4], 1, function(x) sum(x*(1:4))/sum(x))
-min.povprecje <- min(druzine$povprecje, na.rm=TRUE)
-max.povprecje <- max(druzine$povprecje, na.rm=TRUE)
+national_tidy_mean <- filter(national_tidy, Type=="Hourly_mean")
+state_tidy_mean <- filter(state_tidy, Type=="Hourly_mean")
+povp_placa_state <- filter(state_tidy_mean, Occupation=="All Occupations") 
+#Spreminljanje povprečne plače v zveznih državah
+graf_state_tidy_mean <- ggplot(data=povp_placa_state, aes(x=Year, y=Wage)) + 
+  geom_smooth(method="loess")
+graf_state_tidy_mean
+test <- ggplotly(graf_state_tidy_mean)
+
+all_states <- map_data("state")
+test_state <- povp_placa_state
+test_state$region <- tolower(povp_placa_state$State)
+Total <- merge(all_states, test_state, by="region")

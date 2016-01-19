@@ -1,3 +1,7 @@
+library(sp)
+library(maptools)
+library(digest)
+gpclibPermit()
 library(knitr)
 library(XML)
 library(RCurl)
