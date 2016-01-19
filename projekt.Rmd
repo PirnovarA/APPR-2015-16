@@ -131,8 +131,8 @@ Največji del tretje faze bom namenil izdelavi grafov in zemljevidov.
 ***
 ```{r povp_plača, echo=FALSE}
 switch (type,
-  latex = graf_state_tidy_mean,
-  html=test
+  latex = graf_national_tidy_mean,
+  html=graf_national_tidy_mean
 )
         
 ```        

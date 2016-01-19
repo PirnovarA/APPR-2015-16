@@ -68,3 +68,6 @@ national_tidy <- rename(national_tidy,Wage=value,Type=variable)
 
 state_tidy <- melt(state, id=c("State", "Occupation","Year"))
 state_tidy <- rename(state_tidy,Wage=value,Type=variable)
+
+iso_state <- read.csv("http://www.fonz.net/blog/wp-content/uploads/2008/04/states.csv",encoding="UTF-8")
+iso_state <- rename(iso_state,Code=Abbreviation)

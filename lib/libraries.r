@@ -11,6 +11,7 @@ library(shiny)
 library(plotly)
 library(ggplot2)
 library(reshape2)
+library(maps)
 
 # Uvozimo funkcije za delo z datotekami XML.
 source("lib/xml.r", encoding = "UTF-8")
