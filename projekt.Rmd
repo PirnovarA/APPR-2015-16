@@ -82,7 +82,6 @@ kable(head(state_tidy))
 
 5. __Wage__: Plača
 
-\pagebreak
 
 ### Per_capita2
 
@@ -116,28 +115,28 @@ kable(head(per_capita_tidy))
 
 4. __Wage__: Povprečna plača v tisti zv. državi v tistem letu
 
-\pagebreak
 
-```{r lineplot, fig.align='center', echo=FALSE, fig.cap='Graf 5ih najbolj plačanih zveznih držav in 5ih najmanj plačanih zveznih držav'}
+```{r lineplot, fig.align='center', echo=FALSE, fig.cap='Sprememba povprecnih plac v zveznih drzavah'}
 
 graf_top_5
 
 ```
 
+
 Spodnji graf prikazuje spremembo povprečne plače glede na razne parametre. Rdeča debela črta prikazuje glajeno spremembo povprečne plače, glede na vse prebivalce ZDA, medtem ko modra črta prikazuje glajeno spremembo povprečne plače glede na povprečne plače v posameznih zveznih državah. Kot je razvidno, in pričakovano, je District of Columbia (DC) zelo nad povprečjem, kar je posledica, da tam živijo v veliki večini politiki, lobisti ipd., kar povečuje standard.   
 Kar pa še lahko opazimo, je to, da očitno v revnejših zveznih državah živi manj ljudi kot v bogatejših, saj je modra krivulja pod rdečo.
 
-```{r povp_plača_graf, echo=FALSE}
+```{r povp_placa_graf, echo=FALSE}
 switch (type,
   latex = graf_national_tidy_mean,
   html=graf_national_tidy_mean
 )
 ```   
 
-Na spodnjem zemljevidu je prikazano razmerje med posameznimi zveznimi državami in povprečnimi plačami. Osnovne barve so za leto 2014, a z "preletom" miške vidimo še povprečne plače v preteklih letih.   
+Na spodnjem zemljevidu je prikazano razmerje med posameznimi zveznimi državami in povprečnimi plačami. Osnovne barve so za leto 2014, a s "preletom" miške vidimo še povprečne plače v preteklih letih.   
 
 
-```{r povp_plača_zemljevid, echo=FALSE}
+```{r povp_placa_zemljevid, echo=FALSE}
 switch (type,
   latex = graf_povp_placa_state_2014,
   html=graf_povp_placa_state_plotly
