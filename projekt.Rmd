@@ -14,7 +14,7 @@ always_allow_html: yes
 type <- knitr::opts_knit$get("rmarkdown.pandoc.to")
 ```
 
-```{r setup, echo=FALSE, results='hide', message=FALSE}
+```{r setup, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
 # Če želimo nastaviti pisave v PDF-ju, odkomentiramo
 # in sledimo navodilom v programu.
 #source("fontconfig.r", encoding = "UTF-8")
@@ -124,15 +124,29 @@ graf_top_5
 
 ```
 
-V tretji fazi bom poskusil narediti povezavo med plačo in življenskim standardom v posamezni zvezni državi. Gledal bom tudi spreminjanje plače med najbolje in najslabše plačanimi poklici.
-Prav tako bom preizkusil mojo predpostavko, da je bolje plačanih poklicev manj.
-Največji del tretje faze bom namenil izdelavi grafov in zemljevidov.   
+Spodnji graf prikazuje spremembo povprečne plače glede na razne parametre. Rdeča debela črta prikazuje glajeno spremembo povprečne plače, glede na vse prebivalce ZDA, medtem ko modra črta prikazuje glajeno spremembo povprečne plače glede na povprečne plače v posameznih zveznih državah. Kot je razvidno, in pričakovano, je District of Columbia (DC) zelo nad povprečjem, kar je posledica, da tam živijo v veliki večini politiki, lobisti ipd., kar povečuje standard.   
+Kar pa še lahko opazimo, je to, da očitno v revnejših zveznih državah živi manj ljudi kot v bogatejših, saj je modra krivulja pod rdečo.
 
-***
-```{r povp_plača, echo=FALSE}
+```{r povp_plača_graf, echo=FALSE}
 switch (type,
   latex = graf_national_tidy_mean,
   html=graf_national_tidy_mean
 )
-        
-```        
+```   
+
+Na spodnjem zemljevidu je prikazano razmerje med posameznimi zveznimi državami in povprečnimi plačami. Osnovne barve so za leto 2014, a z "preletom" miške vidimo še povprečne plače v preteklih letih.   
+
+
+```{r povp_plača_zemljevid, echo=FALSE}
+switch (type,
+  latex = graf_povp_placa_state_2014,
+  html=graf_povp_placa_state_plotly
+)
+```  
+
+Kar lahko vidimo, je to, da so najrevnejše države znotraj ZDA, ter proti jugu. To je logična posledica pomankanja naravnih virov, prav tako pa je možno opaziti korelacijo med politično afiliacijo (demokrati/republikanci) in povprečno plačo.
+
+```{r volitve, echo=FALSE}
+volitve_2012
+```
+

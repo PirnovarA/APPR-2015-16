@@ -5,10 +5,14 @@ source("lib/uvozi.zemljevid.r",encoding="UTF-8")
 state_tidy_mean <- filter(state_tidy, Type=="Hourly_mean")      #Samo povprecne place v tabelci
 povp_placa_state <- filter(state_tidy_mean, Occupation=="All Occupations")    #Za vsak state samo povprecno plačo
 
+national_tidy_mean <- filter(national_tidy, Type=="Hourly_mean")      #Samo povprecne place v tabelci
+povp_placa_national <- filter(national_tidy_mean, Occupation=="All Occupations")    #Za cele ZDA povprecna plača
+
+povp_placa_top_low <- filter(povp_placa_state, State %in% c("Mississippi","South Dakota", "District of Columbia","Massachusetts","New York","West Virginia")) #3 z najvisjo in 3 z najnizjo povprecno placo
 #Spreminljanje povprečne plače v zveznih državah
-graf_national_tidy_mean <- ggplot(data=povp_placa_state, aes(x=Year, y=Wage)) + 
-  geom_smooth(method="loess")         #Glajeno krivuljo, ki odraža spreminjanje povprecja v USA
-#graf_national_tidy_mean_plotly <- ggplotly(graf_national_tidy_mean)
+graf_national_tidy_mean <- ggplot() + geom_line(data=povp_placa_top_low,aes(x=Year,y=Wage,group=State,colour=State))+
+  geom_smooth(data=povp_placa_state, aes(x=Year, y=Wage),method="loess",color="blue")  + geom_smooth(data=povp_placa_national, aes(x=Year, y=Wage), method="loess", color="red")      #Glajeno krivuljo, ki odraža spreminjanje povprecja v USA
+
 
 #Povprečne plače v zveznih državah v 2014-GRAF
 states_map <- map_data("state")           #Tabela, v kateri so states in njihove lat in long, ter podobni podtki, za graf
@@ -31,28 +35,40 @@ povp_placa_state_for_plotly$`2008` <- (filter(povp_placa_state, Year==2008))$Wag
 povp_placa_state_for_plotly$`2006` <- (filter(povp_placa_state, Year==2006))$Wage
 povp_placa_state_for_plotly$`2004` <- (filter(povp_placa_state, Year==2004))$Wage
 povp_placa_state_for_plotly$`2002` <- (filter(povp_placa_state, Year==2002))$Wage
-
+#Zdej pa graf, v plotly
 povp_placa_state_for_plotly$hover <- with(povp_placa_state_for_plotly,paste
-                                          (state, '<br>', "2014", `2014`,'<br>', 
+                                          (State,'<br>', 
                                           "2012", `2012`,'<br>', "2010", `2010`,'<br>',
                                           "2008", `2008`,"<br>", "2006", `2006`,'<br>',
                                           "2004", `2004`,"<br>","2002",`2002`))
-#Poskus s plotly mapo
-df <- read.csv("https://raw.githubusercontent.com/plotly/datasets/master/2011_us_ag_exports.csv")
-df$hover <- with(df, paste(state, '<br>', "Beef", beef, "Dairy", dairy, "<br>",
-                           "Fruits", total.fruits, "Veggies", total.veggies,
-                           "<br>", "Wheat", wheat, "Corn", corn))
-# give state boundaries a white border
-l <- list(color = toRGB("white"), width = 2)
-# specify some map projection/options
-g <- list(
-  scope = 'usa',
-  projection = list(type = 'albers usa'),
-  showlakes = TRUE,
-  lakecolor = toRGB('white')
-)
+#Nastavitve/opcije za prikaz mape
+meje <- list(color = toRGB("white"), width = 2)
+parametri <- list(scope = 'usa',projection = list(type = 'albers usa'),showlakes = TRUE,lakecolor = toRGB('white'))
 
-plot_ly(df, z = total.exports, text = hover, locations = code, type = 'choropleth',
-        locationmode = 'USA-states', color = total.exports, colors = 'Purples',
-        marker = list(line = l), colorbar = list(title = "Millions USD")) %>%
-  layout(title = '2011 US Agriculture Exports by State<br>(Hover for breakdown)', geo = g)
+graf_povp_placa_state_plotly <- plot_ly(povp_placa_state_for_plotly, z = `2014`, text = hover, locations = Code, type = 'choropleth',
+        locationmode = 'USA-states', color = `2014`, colors = 'Reds',
+        marker = list(line = meje), colorbar = list(title = "Dollars per hour")) %>%
+  layout(title = 'Mean wages by states', geo = parametri)
+
+
+#Volitve 2012
+zda <- uvozi.zemljevid("http://baza.fmf.uni-lj.si/states_21basic.zip", "states")
+capitals <- read.csv("podatki/uscapitals.csv")
+row.names(capitals) <- capitals$state
+capitals <- preuredi(capitals, zda, "STATE_NAME")
+capitals$US.capital <- capitals$capital == "Washington"
+
+## Dodamo podatke o predsedniških volitvah v zemljevid
+zda$vote.2012 <- capitals$vote.2012
+zda$electoral.votes <- capitals$electoral.votes
+usa <- pretvori.zemljevid(zda)
+
+usa.cont <- usa %>% filter(! STATE_NAME %in% c("Alaska", "Hawaii"))
+capitals.cont <- capitals %>% filter(! state %in% c("Alaska", "Hawaii"))
+
+volitve_2012 <- ggplot() + geom_polygon(data = usa.cont,
+                                aes(x = long, y = lat,
+                                    group = group, fill = vote.2012)) +
+  scale_fill_manual(values = c("blue", "red")) +
+  guides(fill = guide_legend("Volitve 2012"))
+
