@@ -1,8 +1,3 @@
-library(shiny)
-library(plotly)
-library(ggplot2)
-library(reshape2)
-
 #ggplot(per_capita) + aes(x = reorder(State,`2012`), y= `2012`) +xlab("State")+geom_bar(stat="identity") + coord_flip()
 
 #Spreminjanje per capita plač skozi leta (per_capita)

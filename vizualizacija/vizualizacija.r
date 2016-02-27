@@ -1,23 +1,23 @@
 # 3. faza: Izdelava zemljevida
 source("lib/uvozi.zemljevid.r",encoding="UTF-8")
 # Uvozimo zemljevid.
-#Urejamo podatke, ustvarjamo zemljevide, na splosno, imamo se fajn(ha-ha)
+#Urejamo podatke, ustvarjamo zemljevide, na splosno, imamo se fajn (ha-ha)
 state_tidy_mean <- filter(state_tidy, Type=="Hourly_mean")      #Samo povprecne place v tabelci
 povp_placa_state <- filter(state_tidy_mean, Occupation=="All Occupations")    #Za vsak state samo povprecno plačo
 
-national_tidy_mean <- filter(national_tidy, Type=="Hourly_mean")      #Samo povprecne place v tabelci
+national_tidy_mean <- filter(national_tidy, Type == "Hourly_mean")      #Samo povprecne place v tabelci
 povp_placa_national <- filter(national_tidy_mean, Occupation=="All Occupations")    #Za cele ZDA povprecna plača
 
 povp_placa_top_low <- filter(povp_placa_state, State %in% c("Mississippi","South Dakota", "District of Columbia","Massachusetts","New York","West Virginia")) #3 z najvisjo in 3 z najnizjo povprecno placo
 #Spreminljanje povprečne plače v zveznih državah
 graf_national_tidy_mean <- ggplot() + geom_line(data=povp_placa_top_low,aes(x=Year,y=Wage,group=State,colour=State))+
   geom_smooth(data=povp_placa_state, aes(x=Year, y=Wage),method="loess",color="blue")  + geom_smooth(data=povp_placa_national, aes(x=Year, y=Wage), method="loess", color="red")      #Glajeno krivuljo, ki odraža spreminjanje povprecja v USA
-
+#Rdeca predstavlja povprečno plačo v ameriki po njihobih podatkih, Modra pa povprečje po stateih
 
 #Povprečne plače v zveznih državah v 2014-GRAF
 states_map <- map_data("state")           #Tabela, v kateri so states in njihove lat in long, ter podobni podtki, za graf
 povp_placa_state$region <- tolower(povp_placa_state$State)    #Ker so v states_map imena z majhnimi zacetnicami, dodamo semkaj se stolpec z malimi imeni drzav
-povp_placa_state <- merge(povp_placa_state,iso_state,by="State")   #Dodamo iso kratice zveznim drzavam, odstranijo se avtomatsko tiste, ki niso tretirane kot drzave (otoki, districty ipd)
+povp_placa_state <- merge(povp_placa_state,iso_state,by="State")   #Dodamo iso kratice zveznim drzavam, odstranijo se avtomatsko tiste, ki niso tretirane kot drzave (otoki, districty, suverena območja ipd)
 povp_placa_state_2014 <- filter(povp_placa_state, Year==2014)     #Tabelca povprecnih plac za samo 2014
 povp_placa_state_2014_map <- merge(states_map, povp_placa_state_2014, by="region") #Zdruzena tabelca z tisto o podatkih o krajih -> pripravljenost na graf
 #Graf ZDA, barvno obarvani statesi, glede na povprecno placo v 2014
@@ -42,15 +42,15 @@ povp_placa_state_for_plotly$hover <- with(povp_placa_state_for_plotly,paste
                                           "2008", `2008`,"<br>", "2006", `2006`,'<br>',
                                           "2004", `2004`,"<br>","2002",`2002`))
 #Nastavitve/opcije za prikaz mape
-meje <- list(color = toRGB("white"), width = 2)
-parametri <- list(scope = 'usa',projection = list(type = 'albers usa'),showlakes = TRUE,lakecolor = toRGB('white'))
+meje <- list(color = toRGB("grey"), width = 2)
+parametri <- list(scope = 'usa',projection = list(type = 'albers usa'),showlakes = TRUE,lakecolor = toRGB('white'),coastlines=TRUE)
 
 graf_povp_placa_state_plotly <- plot_ly(povp_placa_state_for_plotly, z = `2014`, text = hover, locations = Code, type = 'choropleth',
         locationmode = 'USA-states', color = `2014`, colors = 'Reds',
         marker = list(line = meje), colorbar = list(title = "Dollars per hour")) %>%
   layout(title = 'Mean wages by states', geo = parametri)
 
-
+#####################################
 #Volitve 2012
 zda <- uvozi.zemljevid("http://baza.fmf.uni-lj.si/states_21basic.zip", "states")
 capitals <- read.csv("podatki/uscapitals.csv")
@@ -58,7 +58,8 @@ row.names(capitals) <- capitals$state
 capitals <- preuredi(capitals, zda, "STATE_NAME")
 capitals$US.capital <- capitals$capital == "Washington"
 
-## Dodamo podatke o predsedniških volitvah v zemljevid
+## Dodamo podatke o predsedniških volitvah v zemljevid, da vidimo, da je revščina in politična
+## usmerjenost povezana
 zda$vote.2012 <- capitals$vote.2012
 zda$electoral.votes <- capitals$electoral.votes
 usa <- pretvori.zemljevid(zda)
@@ -71,4 +72,4 @@ volitve_2012 <- ggplot() + geom_polygon(data = usa.cont,
                                     group = group, fill = vote.2012)) +
   scale_fill_manual(values = c("blue", "red")) +
   guides(fill = guide_legend("Volitve 2012"))
-
+###################################

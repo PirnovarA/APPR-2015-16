@@ -1,17 +1,10 @@
 # 2. faza: Uvoz podatkov
-
-library(XML)
-library(RCurl)
-library(gdata)
-library(dplyr)
-library(reshape2)
-
 source("uvoz/funkcije.r", encoding = "UTF-8")
 ##############################################################################################
 #National in states
 source("uvoz/uvoz_national.r", encoding = "UTF-8")
 
-##############################################################################################
+### Mean per capita in States ###########################################################################################
 #Uvoz tabele s povprečnim prihodkom na državljana v zveznih državah
 
 u= "http://www.infoplease.com/ipa/A0104652.html"
@@ -30,8 +23,8 @@ per_capita <- replace(per_capita,per_capita=="DC","Washington, D.C.")  #Zamenjam
 
 #Tidy data
 per_capita_tidy <- melt(per_capita,id="State")
-per_capita_tidy <- rename(per_capita_tidy,Year=variable,Wage=value)
-###########################################################################
+per_capita_tidy <- dplyr::rename(per_capita_tidy,Year=variable,Wage=value)
+### Mean per capita ########################################################################
 #Uvoz tabele s povprecnim prihodkom na državljana v ZDA
 
 u=getURL("https://en.wikipedia.org/wiki/List_of_U.S._states_by_income",.opts = list(ssl.verifypeer = FALSE) )
@@ -49,7 +42,21 @@ per_capita2[indx] <- lapply(per_capita2[indx], function(x) as.numeric(gsub("[,$]
 
 #Tidy data
 per_capita2_tidy <- melt(per_capita2, id=c("State","Population","Number of households"))
-per_capita2_tidy <-rename(per_capita2_tidy,Wage=value, Type=variable)
+per_capita2_tidy <-dplyr::rename(per_capita2_tidy,Wage=value, Type=variable)
+### Cost of living #########################################################################
+#S https://www.missourieconomy.org/indicators/cost_of_living/index.stm dobimo tabelco z indeksi
+#za cost of living za posamezen state.. Ker je to (vsaj zastonjsko) težje najti kot spodobnega 
+#republikanskega kandidata, se zadovoljimo s tem in tudi za samo eno leto(2015), ker.. pac ja...
+u=getURL("https://www.missourieconomy.org/indicators/cost_of_living/index.stm",.opts = list(ssl.verifypeer = FALSE))  #Dobimo link, ker je https se malo "pomatramo"
+tables = readHTMLTable(u, fileEncoding = "UTF-8",stringsAsFactors=FALSE) #Dobimo tabele z linka
+cost_of_living = tables[[1]]  #Izberemo ta pravo tabelo
+names(cost_of_living) <- cost_of_living[1,]    #Prvo vrstico uporabimo za imena stolpcev
+cost_of_living <- (cost_of_living[-1,])[-2]    #Znebimo se prve vrstice in stolpca Rank
+cost_of_living[c(2:8)] <- lapply((cost_of_living[c(2:8)]), function(x) as.numeric(x))  #Indekse spremenimo v numeric
+
+#Tidy data 
+cost_of_living_tidy <- melt(cost_of_living, id=c("State"))
+cost_of_living_tidy <- dplyr::rename(cost_of_living_tidy, Cost.of.Living=value, Type= variable)
 ############################################################################
 source("uvoz/uredi_percapita.r", encoding = "UTF-8")
 source("uvoz/grafi.r", encoding = "UTF-8")

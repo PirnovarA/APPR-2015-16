@@ -1,4 +1,4 @@
-#Uvoz tabel national in state, s podatki o placah iz "Bureau of Labor statistics"
+### Uvoz tabel national in state, s podatki o placah iz "Bureau of Labor statistics" ########
 
 #2014
 national_2014 <- naredi("podatki/national_2014.csv")
@@ -49,11 +49,11 @@ national_2002 <- naredi.urne(national_2002,"national","2002")
 state_2002 <- naredi("podatki/state_2002.csv", "state","2002")
 state_2002 <- naredi.urne(state_2002,"state","2002")
 
-##########################################################################################
+### Združitev national in state ###########################################################
 #Skupaj sem dal vse national in vse state tabele, da dobim 2 veliki tabeli z vsemi stvarcami
 national <- rbind(national_2014,national_2012,national_2010,national_2008,national_2006,national_2004,national_2002)
 state <- rbind(state_2014,state_2012,state_2010,state_2008,state_2006,state_2004,state_2002)
-##########################################################################################
+### Posebej damo št zaposlenih ############################################################
 #Tabele, v katerih so spravljeni podatki o stevilu zaposlenih
 zaposlitev_nat <- subset(national,select=c(Occupation,Total_employment,Year))
 zaposlitev_st <- subset(state, select=c(State,Occupation,Total_employment,Year))
@@ -61,13 +61,13 @@ zaposlitev_st <- subset(state, select=c(State,Occupation,Total_employment,Year))
 national <- subset(national, select=-Total_employment)
 state <- subset(state, select=-Total_employment)
 
-#########################################################################################
+### Tidy data ##############################################################################
 #Podatke dam v tidy data
 national_tidy <- as.data.frame(melt(national, id=c("Occupation","Year")))
-national_tidy <- rename(national_tidy,Wage=value,Type=variable)
+national_tidy <- dplyr::rename(national_tidy,Wage=value,Type=variable)
 
 state_tidy <- melt(state, id=c("State", "Occupation","Year"))
-state_tidy <- rename(state_tidy,Wage=value,Type=variable)
+state_tidy <- dplyr::rename(state_tidy,Wage=value,Type=variable)
 
 iso_state <- read.csv("http://www.fonz.net/blog/wp-content/uploads/2008/04/states.csv",encoding="UTF-8")
-iso_state <- rename(iso_state,Code=Abbreviation)
+iso_state <- dplyr::rename(iso_state,Code=Abbreviation)

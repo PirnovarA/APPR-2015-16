@@ -34,6 +34,7 @@ Analiza plač v ZDA. Zanima me, kateri poklici zaslužijo največ, ter kateri na
 ```{r uvoz, echo=FALSE, message=FALSE}
 source("uvoz/uvoz.r", encoding = "UTF-8")
 source("vizualizacija/vizualizacija.r", encoding = "UTF-8")
+source("analiza/analiza.r", encoding = "UTF-8")
 ```
 
 Uvozil sem podatke z Ameriškega statističnega urada (http://www.bls.gov/bls/proghome.htm) v .CSV obliki. To sem ločil na prikaz urnih ter letnih plač ter število zaposlenih v posameznem poklicu.   
@@ -148,4 +149,92 @@ Kar lahko vidimo, je to, da so najrevnejše države znotraj ZDA, ter proti jugu.
 ```{r volitve, echo=FALSE}
 volitve_2012
 ```
+
+### Finančni poklici
+
+Sedaj pa poglejmo poklice, ki jih lahko opravljamo finančni matematiki.   
+
+```{r financni_tabela, echo=FALSE}
+kable(col.to.name(financni_nat_2014))
+```  
+
+V zgornji tabeli so prikazani izbrani poklici, prav tako pa tudi njihove plače, ter kasneje omenjeni plačilni razred.
+
+Vso naslednjo analizo, ki sem jo izvajal za finančne poklice, sem temeljil na teh. V nadaljevanju se bom na te poklice nanašal z _finančni poklici_.  
+
+Kot prvo me je zanimalo, kako se na nacionalni ravni razlikuje povprečna plača v ZDA od povprečne plače finančnih poklicev.
+
+```{r povp_placa_nat_fin, echo=FALSE}
+switch (type,
+  latex = graf_national_fin,
+  html=graf_national_fin_plotly
+)
+```  
+
+Kot je na zgornjem grafu zelo lepo vidno, je plača finančnih poklicev veliko višja, kot povprečna plača na nacionalni ravni. To je pričakovano, saj zahtevajo te poklici leta šolanja, bolje plačani od teh pa tudi dobro poznavanje matematike, kar je redka lastnost. So se pa plače, pričakovano, obnašale podobno kot tiste na nacionalni ravni, se pravi, da so doživele padec po krizi, vendar pa se sedaj hitreje večajo kot povprečna plača. To je tudi ponazorjeno s predikcijo za leto 2016 (za letošnje leto še ni podatkov, zato je nemogoče preveriti pravilnost napovedi). Verjetno napoved ni čisto točna, saj je kriza vplivala na višino plač, kar je lahko privedlo do nepravilnosti v napovedni krivulji.
+
+```{r financni_placa, echo=FALSE}
+switch (type,
+  latex = graf_financni_mean_2014,
+  html=graf_financni_mean_2014
+)
+```  
+
+Na zgornjem zemljevidu vidimo razporeditev plač po zveznih državah. Višje so ob obalah in na splošno tam, kjer so višje tudi nacionalne, kar je pričakovano.
+
+### Realne plače
+
+Realne plače so plače, ki delijo nominalno plačo s ceno dobrin oz indeksom COL (Cost of living). Z njimi je možna dejanska primerjava med standardi v različnih državah, saj večja nominalna plača ne pomeni vedno višjega življenskega standarda.   
+Indeks COL sem dobil samo za leto 2015, kajti za združene države ga ni prosto dostopnega oz je plačljiv. Tako da sem malo pogoljufal, in uporabil indeks na podatkih iz leta 2014. Podatki, pridobljeni na ta način so primerni za grafično analizo med zveznimi državami.
+
+Spodnji graf prikazuje razdelitev ZDA glede na realno plačo finančnih poklicev.   
+
+```{r real_placa_fin_st, echo=FALSE}
+switch (type,
+  latex = graf_COL_state_fin_mean_plotly,
+  html=graf_COL_state_fin_mean_plotly
+)
+```  
+
+Kot lahko opazimo, ni nujno, da najvišja dolarska plača prinese najvišjo realno plačo. Prav tako pa lahko opazimo (s pomočjo plačilnih razredov, podrobneje razloženih kasneje), da plačilni razred finančnega poklica ni nujno enak povprečnemu za tisto državo.
+
+### Plačilni razredi
+
+Že zgoraj omenjeni plačilni razredi ponazarjajo razdeljenost poklicev in zveznih držav na določene skupine, glede na višino plač. Razdelitev je opravljena z vgrajenimi funkcijami v R-u, kjer prvo podatke spravimo v drevo s funkcijo ``hclust, to drevo pa nato "obrežemo", da dobimo toliko vej oz. skupin, kot jih rabimo. To je uporabno, če hočemo grupirati poklice za kasnejšo analizo, v praksi pa je to uporabno tudi z vidika dohodkovnih razredov in z njimi povezanimi prispevki.
+
+Primer razdelitve na drevo lahko vidimo v spodnjem grafu, kjer sem poklice znotraj _finančnih poklicev_ razdelil na drevo.
+
+```{r financno_drevo, echo=FALSE}
+plot(graf_financni_nat_drevo, main="Finančni poklici v ZDA")
+```  
+
+Plačo nacionalnih poklicev sem razdelil na 6 razredov, ki prikazujejo:
+
+- __1__: Visoki visoki razred (najvišje plače)
+
+- __2__: Nizki visoki razred (še vedno v visokem razredu, a nižje)
+
+- __3__: Visoki srednji razred
+
+- __4__: Nizki srednji razred
+
+- __5__: Visoki nižji razred
+
+- __6__: nizki nizki razred (najnižje plače)
+
+- __FIN__: Plače finančnih poklicov
+
+Spodaj je prikazan graf, kako so se spreminjale plače v plačilnih razredih skozi leta, prav tako pa je napovedana še plača v letu 2016.
+
+```{r national_grade_graf, echo=FALSE}
+switch (type,
+  latex = graf_national_grade,
+  html=graf_national_grade_plotly
+)
+``` 
+
+
+
+
+
 

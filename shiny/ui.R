@@ -2,7 +2,7 @@ library(shiny)
 
 shinyUI(fluidPage(
   
-  titlePanel("Slovenske občine"),
+  titlePanel("Plače v Ameriki"),
   
   tabsetPanel(
       tabPanel("Velikost družine",
