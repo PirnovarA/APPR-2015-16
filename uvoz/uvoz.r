@@ -47,12 +47,14 @@ per_capita2_tidy <-dplyr::rename(per_capita2_tidy,Wage=value, Type=variable)
 #S https://www.missourieconomy.org/indicators/cost_of_living/index.stm dobimo tabelco z indeksi
 #za cost of living za posamezen state.. Ker je to (vsaj zastonjsko) težje najti kot spodobnega 
 #republikanskega kandidata, se zadovoljimo s tem in tudi za samo eno leto(2015), ker.. pac ja...
-u=getURL("https://www.missourieconomy.org/indicators/cost_of_living/index.stm",.opts = list(ssl.verifypeer = FALSE))  #Dobimo link, ker je https se malo "pomatramo"
-tables = readHTMLTable(u, fileEncoding = "UTF-8",stringsAsFactors=FALSE) #Dobimo tabele z linka
+u=GET("https://www.missourieconomy.org/indicators/cost_of_living/index.stm")  #Dobimo link, ker je https se malo "pomatramo"
+tables = readHTMLTable(content(u), fileEncoding = "UTF-8",stringsAsFactors=FALSE) #Dobimo tabele z linka
 cost_of_living = tables[[1]]  #Izberemo ta pravo tabelo
 names(cost_of_living) <- cost_of_living[1,]    #Prvo vrstico uporabimo za imena stolpcev
 cost_of_living <- (cost_of_living[-1,])[-2]    #Znebimo se prve vrstice in stolpca Rank
 cost_of_living[c(2:8)] <- lapply((cost_of_living[c(2:8)]), function(x) as.numeric(x))  #Indekse spremenimo v numeric
+
+write.csv2(cost_of_living, "podatki/cost_of_living.csv",fileEncoding="UTF-8",row.names = FALSE)
 
 #Tidy data 
 cost_of_living_tidy <- melt(cost_of_living, id=c("State"))

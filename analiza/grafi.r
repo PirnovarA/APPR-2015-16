@@ -65,7 +65,7 @@ financni_nat_drevo <- drevesa(financni_nat_2014)
 graf_financni_nat_drevo <- as.dendrogram(financni_nat_drevo)
 financni_nat_2014 <- obrezi(financni_nat_drevo,financni_nat_2014,n=3)
 
-plot(graf_financni_nat_drevo, main="Finančni poklici v ZDA")
+#plot(graf_financni_nat_drevo, main="Finančni poklici v ZDA")
 
 
 

@@ -1,41 +1,25 @@
 ---
-title: "Poročilo pri predmetu Analiza podatkov s programom R"
+title: "Analiza plač v ZDA"
 author: "Andraž Pirnovar"
-output:
-  html_document: default
-  pdf_document:
-    includes:
-      in_header: lib/styles.sty
-    latex_engine: xelatex
-always_allow_html: yes
+date: "27 February 2016"
+output: html_document
+runtime: shiny
 ---
-
-```{r, echo=FALSE}
-type <- knitr::opts_knit$get("rmarkdown.pandoc.to")
-```
-
 ```{r setup, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
-# Če želimo nastaviti pisave v PDF-ju, odkomentiramo
-# in sledimo navodilom v programu.
-#source("fontconfig.r", encoding = "UTF-8")
-
 # Uvoz vseh potrebnih knjižnic
 source("lib/libraries.r", encoding = "UTF-8")
+source("uvoz/uvoz.r", encoding = "UTF-8")
+source("vizualizacija/vizualizacija.r", encoding = "UTF-8")
+source("analiza/analiza.r", encoding = "UTF-8")
 ```
 
-# Izbira teme
+## Izbira teme
 
 Analiza plač v ZDA. Zanima me, kateri poklici zaslužijo največ, ter kateri najmanj. Zanima me tudi, v kateri zvezni državi je najugodneje živeti, glede na povprečni dohodek na prebivalca in povprečni dohodek na gospodinjstvo ter družino. Imel bom tudi primerjavo povprečnih plač v zveznih državah po letih.   
 
 ***
 
-# Obdelava, uvoz in čiščenje podatkov
-
-```{r uvoz, echo=FALSE, message=FALSE}
-source("uvoz/uvoz.r", encoding = "UTF-8")
-source("vizualizacija/vizualizacija.r", encoding = "UTF-8")
-source("analiza/analiza.r", encoding = "UTF-8")
-```
+### Obdelava, uvoz in čiščenje podatkov
 
 Uvozil sem podatke z Ameriškega statističnega urada (http://www.bls.gov/bls/proghome.htm) v .CSV obliki. To sem ločil na prikaz urnih ter letnih plač ter število zaposlenih v posameznem poklicu.   
 Druge podatke, o povprečnih plačah v zveznih državah, sem pridobil v obliki HTML in sicer iz Wikipedije in spletne strani infoplease.   
@@ -43,7 +27,7 @@ Vse podane plače so v $.
 
 ### National in state
 
-Podatke sem pridobil za 14 let in sicer za vsaki dve leti (2014, 2012, 2012, 2010, 2008, 2006, 2004, 2002). Starejši podatki so se od novih razlikovali, predvsem v imenih stolpcev, prav tako pa tudi v predoločenih vredostih maksimalne plače. Kot sem kasneje, med urejanjem opazil, nisi vsi poklici, ali obstajali, ali bolj verjetno, niso bili popisani oz. dani v isto kategorijo, tako da bo med analizo in graficnim prikazom kdaj mogoce opaziti kaksno anomalijo, posledico danih podatkov.    
+Podatke sem pridobil za 14 let in sicer za vsaki dve leti (2014, 2012, 2012, 2010, 2008, 2006, 2004, 2002). Starejši podatki so se od novih razlikovali, predvsem v imenih stolpcev, prav tako pa tudi v predoločenih vredostih maksimalne plače. Kot sem kasneje, med urejanjem opazil, niso vsi poklici, ali obstajali, ali bolj verjetno, niso bili popisani oz. dani v isto kategorijo, tako da bo med analizo in grafičnim prikazom kdaj mogoče opaziti kaksno anomalijo, posledico danih podatkov.    
 
 Iz vseh podatkov sem si izbral samo urne plače, ne pa tudi letnih, kajti razlike v rezultatih bi bile minimalne, če sploh. V svojo tabelo sem shranil tudi podatke o zaposlitvi (v povezavi s poklicem, letom in zvezno državo), da se ne bi ponavljali.   
 
@@ -86,7 +70,7 @@ kable(head(state_tidy))
 
 ### Per_capita2
 
-Tabela per_capita2 (dobljena iz Wikipedije v HTML) prikazuje primerjavo med zveznimi državami glede na zaslužek per capita, povprečnim dohodkom gospodinjstva in dohodkom družine, zraven pa so še podatki o št. prebivalcev v državi in številu gospodinjstev.  
+Tabela `per_capita2` (dobljena iz Wikipedije v HTML) prikazuje primerjavo med zveznimi državami glede na zaslužek per capita, povprečnim dohodkom gospodinjstva in dohodkom družine, zraven pa so še podatki o št. prebivalcev v državi in številu gospodinjstev.  
 Te tabele nisem kaj preveč urejal, razen, da sem spremenil vrednosti v "numeric", odstranil simbole in vejice, ipd. in jo dal v obliko tidy data    
 
 
@@ -104,7 +88,7 @@ kable(head(per_capita2_tidy))
 
 ### Per_capita
 
-Tabela per_capita prikazuje, že spet, zvezne države, urejene po povprečnih plačah. A tokrat imamo plače za več različnih let, prirejene inflaciji. Tabelo sem prav tako dobil iz interneta, v obliki HTML. Sedaj je v obliki tidy data.   
+Tabela `per_capita` prikazuje, že spet, zvezne države, urejene po povprečnih plačah. A tokrat imamo plače za več različnih let, prirejene inflaciji. Tabelo sem prav tako dobil iz interneta, v obliki HTML. Sedaj je v obliki tidy data.   
 
 ```{r percapita, echo=FALSE}
 kable(head(per_capita_tidy))
@@ -116,32 +100,73 @@ kable(head(per_capita_tidy))
 
 4. __Wage__: Povprečna plača v tisti zv. državi v tistem letu
 
+Spodnji graf prikazuje spremembo plače na prebivalca skozi leta. Opazimo, da se zaradi inflacije plače povečujejo, a da se nekatere odlepijo in naraščajo hitreje. Neenakost med zv. državami je večja, kot je bila včasih.
 
-```{r lineplot, fig.align='center', echo=FALSE, fig.cap='Sprememba povprecnih plac v zveznih drzavah'}
+```{r lineplot, echo=FALSE}
+renderPlot({
+  top_5 <- myReact1()
+  print(ggplot(top_5, 
+                       main="Growth of per capita income through the years",
+    aes(x=Year, y = Wage ,colour=State)) + geom_line(aes(group=State)) + xlab("Year") + 
+    ylab("$ per capita") + geom_point())
+})
+inputPanel(
+  fluidRow(checkboxGroupInput("katere", "States:",inline=TRUE, width = "350%", selected=c(unique(top_5$State)),
+                     choices = c(unique(per_capita_tidy$State))),align="center"
+))
+myReact1 <- reactive({
+  filter(per_capita_tidy, State %in% input$katere)
+})
 
-graf_top_5
 
 ```
 
 
-Spodnji graf prikazuje spremembo povprečne plače glede na razne parametre. Rdeča debela črta prikazuje glajeno spremembo povprečne plače, glede na vse prebivalce ZDA, medtem ko modra črta prikazuje glajeno spremembo povprečne plače glede na povprečne plače v posameznih zveznih državah. Kot je razvidno, in pričakovano, je District of Columbia (DC) zelo nad povprečjem, kar je posledica, da tam živijo v veliki večini politiki, lobisti ipd., kar povečuje standard.   
+Spodnji graf prikazuje spremembo povprečne plače glede na razne parametre. Rdeča debela črta prikazuje glajeno spremembo povprečne plače, glede na vse prebivalce ZDA, medtem ko modra črta prikazuje glajeno spremembo povprečne plače glede na povprečne plače v posameznih zveznih državah. Kot je razvidno, in pričakovano, je _District of Columbia (DC)_ zelo nad povprečjem, kar je posledica, da tam živijo v veliki večini politiki, lobisti ipd., kar povečuje standard.   
 Kar pa še lahko opazimo, je to, da očitno v revnejših zveznih državah živi manj ljudi kot v bogatejših, saj je modra krivulja pod rdečo.
 
 ```{r povp_placa_graf, echo=FALSE}
-switch (type,
-  latex = graf_national_tidy_mean,
-  html=graf_national_tidy_mean
-)
-```   
+drzave <- aggregate(.~State, data=subset(povp_placa_state,select=c(State, Wage)),mean)
+drzave <- dplyr::arrange(drzave, desc(Wage))
 
-Na spodnjem zemljevidu je prikazano razmerje med posameznimi zveznimi državami in povprečnimi plačami. Osnovne barve so za leto 2014, a s "preletom" miške vidimo še povprečne plače v preteklih letih.   
+renderPlot({
+  df <- myReact2()
+  graf_national_tidy_mean <- ggplot() + geom_line(data=df,aes(x=Year,y=Wage,group=State,colour=State))+
+  geom_smooth(data=povp_placa_state, aes(x=Year, y=Wage),method="loess",color="blue")  + geom_smooth(data=povp_placa_national, aes(x=Year, y=Wage), method="loess", color="red")
+  print(graf_national_tidy_mean)
+})
+inputPanel(fluidRow(sliderInput("koliko", label = "Število prikazanih držav:",
+              min = 1, max = length(drzave$State), value = 3, step = 1, width = "300%") ,align="center"
+))
+
+myReact2 <- reactive({
+  koliko <- input$koliko
+  filter(povp_placa_state, State %in% drzave$State[1:koliko])
+})
+```
+
+
+Na spodnjem zemljevidu je prikazano razmerje med posameznimi zveznimi državami in povprečnimi plačami. Temnejša je barva, višja je plača. Porazdelitev je ostala približno ista, glede na barvno razmerje pa je možno opaziti, da so se razlike med bogatejšimi in revnejšimi zveznimi državami povečale
 
 
 ```{r povp_placa_zemljevid, echo=FALSE}
-switch (type,
-  latex = graf_povp_placa_state_2014,
-  html=graf_povp_placa_state_plotly
-)
+za_plotly <- povp.za.plotly(povp_placa_state)
+inputPanel(
+  fluidRow(sliderInput("kdaj", label = "Leto:",
+              min = 2002, max = 2014, value = 2002, step = 2,sep="",animate=animationOptions(interval=5000,loop=FALSE))
+))
+myReact3 <- reactive({
+  input$kdaj
+})
+renderPlotly({
+  leto <- paste0("x",myReact3())
+  graf_povp_placa_state_plotly <- plot_ly(za_plotly, z =get(leto) , text = hover, locations = Code, type = 'choropleth',
+        locationmode = 'USA-states', color = get(leto), colors = 'Reds',
+        marker = list(line = meje), colorbar = list(title = "Dollars per hour")) %>%
+  layout(title = 'Mean wages by states', geo = parametri)
+  graf_povp_placa_state_plotly
+})
+
 ```  
 
 Kar lahko vidimo, je to, da so najrevnejše države znotraj ZDA, ter proti jugu. To je logična posledica pomankanja naravnih virov, prav tako pa je možno opaziti korelacijo med politično afiliacijo (demokrati/republikanci) in povprečno plačo.
@@ -165,19 +190,14 @@ Vso naslednjo analizo, ki sem jo izvajal za finančne poklice, sem temeljil na t
 Kot prvo me je zanimalo, kako se na nacionalni ravni razlikuje povprečna plača v ZDA od povprečne plače finančnih poklicev.
 
 ```{r povp_placa_nat_fin, echo=FALSE}
-switch (type,
-  latex = graf_national_fin,
-  html=graf_national_fin_plotly
-)
+graf_national_fin_plotly
+
 ```  
 
 Kot je na zgornjem grafu zelo lepo vidno, je plača finančnih poklicev veliko višja, kot povprečna plača na nacionalni ravni. To je pričakovano, saj zahtevajo te poklici leta šolanja, bolje plačani od teh pa tudi dobro poznavanje matematike, kar je redka lastnost. So se pa plače, pričakovano, obnašale podobno kot tiste na nacionalni ravni, se pravi, da so doživele padec po krizi, vendar pa se sedaj hitreje večajo kot povprečna plača. To je tudi ponazorjeno s predikcijo za leto 2016 (za letošnje leto še ni podatkov, zato je nemogoče preveriti pravilnost napovedi). Verjetno napoved ni čisto točna, saj je kriza vplivala na višino plač, kar je lahko privedlo do nepravilnosti v napovedni krivulji.
 
 ```{r financni_placa, echo=FALSE}
-switch (type,
-  latex = graf_financni_mean_2014,
-  html=graf_financni_mean_2014
-)
+graf_financni_mean_2014
 ```  
 
 Na zgornjem zemljevidu vidimo razporeditev plač po zveznih državah. Višje so ob obalah in na splošno tam, kjer so višje tudi nacionalne, kar je pričakovano.
@@ -190,13 +210,13 @@ Indeks COL sem dobil samo za leto 2015, kajti za združene države ga ni prosto 
 Spodnji graf prikazuje razdelitev ZDA glede na realno plačo finančnih poklicev.   
 
 ```{r real_placa_fin_st, echo=FALSE}
-switch (type,
-  latex = graf_COL_state_fin_mean_plotly,
-  html=graf_COL_state_fin_mean_plotly
-)
+graf_COL_state_fin_mean_plotly
+
 ```  
 
-Kot lahko opazimo, ni nujno, da najvišja dolarska plača prinese najvišjo realno plačo. Prav tako pa lahko opazimo (s pomočjo plačilnih razredov, podrobneje razloženih kasneje), da plačilni razred finančnega poklica ni nujno enak povprečnemu za tisto državo.
+Kot lahko opazimo, ni nujno, da najvišja dolarska plača prinese najvišjo realno plačo. To je posledica dejstva, da višja nominalna plača s sabo pripelje tudi višji življenski standard. Prav tako pa lahko opazimo (s pomočjo plačilnih razredov, podrobneje razloženih kasneje), da plačilni razred finančnega poklica ni nujno enak povprečnemu za tisto državo.
+Iz grafa sodeč, je vzhodna obala ZDA bolj primerna za finančnike, sploh _Virginia_ in _North Carolina_. Presenetljivo pa je Texas visoko na lestvici. To je posledica tega, da je ena izmed večjih in najpomembnejših zveznih držav, ki pa ni ob obali, kar mu zniža ceno življenja.   
+Še ena koristna opazka, sploh za nas, pa je, da je v skoraj vseh zveznih državah realna plača finančnikov vsej dvakrat višja od povprečne.
 
 ### Plačilni razredi
 
@@ -227,13 +247,57 @@ Plačo nacionalnih poklicev sem razdelil na 6 razredov, ki prikazujejo:
 Spodaj je prikazan graf, kako so se spreminjale plače v plačilnih razredih skozi leta, prav tako pa je napovedana še plača v letu 2016.
 
 ```{r national_grade_graf, echo=FALSE}
-switch (type,
-  latex = graf_national_grade,
-  html=graf_national_grade_plotly
-)
+graf_national_grade_plotly
 ``` 
 
+Kot vidimo, je urna plača v razredih dokaj konstanta, z izjemo kakšnih šokov, kot je naprimer gospodarska kriza. Ta se je bolj poznala pri nižjih razredih. Iz tega grafa je tudi lepo razviden razmak med najvišjim plačnim razredom ter ostalimi.
 
+###Tabela poklicev
+
+Spodaj imamo tabelo poklicev, ki je pravzaprav interaktivna tabela `state`. V njej se nahajajo podatki o plačah v zveznih državah, poklicih itd. Brskanje po njej je interaktivno in omogoča uporabniku vpogled v podatke.
+
+```{r poklici, echo=FALSE}
+fluidPage(
+    titlePanel("State"),
+    fluidRow(
+      column(4,
+          selectInput("st", "Zvezne države:",c("Vse", unique(state$State)))),
+      column(4,
+             selectInput("pok", "Poklici:", c("Vsi", unique(state$Occupation)))),
+      column(4,
+          selectInput("let", "Leto:", c("Vsa", unique(as.character(state$Year))))),
+      column(4,
+          selectInput("raz","Plačilni razred:",c("Vsi", unique(state$Pay_grade)))),
+      column(4,
+             checkboxInput("fin","Finančni poklici",value = FALSE))
+    ),
+    # Create a new row for the table.
+    fluidRow(
+      DT::dataTableOutput("table")
+    )
+  )
+
+output$table <- DT::renderDataTable(DT::datatable({
+    data <- state
+    if (input$st != "Vse"){
+      data <- data[data$State == input$st,]
+    }
+    if (input$pok != "Vsi") {
+      data <- data[data$Occupation == input$pok,]
+    }
+    if (input$let != "Vsa") {
+      data <- data[data$Year == input$let,]
+    }
+    if (input$raz != "Vsi") {
+      data <- data[data$Pay_grade == input$raz,]
+    }
+    if (input$fin == TRUE){
+      data <- filter(data, Occupation %in% financni)
+    }
+    data
+  }))
+
+```  
 
 
 

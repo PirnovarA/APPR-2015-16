@@ -117,8 +117,9 @@ rm(zacasna)
 financni_st_tidy_mean <- filter(financni_st_tidy, Type %in% "Hourly_mean")
 financni_st_tidy_mean <- zaokrozi(aggregate(. ~ State + Year, data=financni_st_tidy_mean[c(-2,-4)], mean),2)  #Sedaj imamo povprecno placo financnih poklicev po letih in drzavah
 
-
-
+### Tabeli z poklici v zveznih državah ##########################################
+state <- merge(state, subset(national, select=c(Occupation,Year,Pay_grade)),by=c("Occupation","Year"))
+state <- dplyr::arrange(state,desc(Year),desc(Hourly_mean))
 
 
 

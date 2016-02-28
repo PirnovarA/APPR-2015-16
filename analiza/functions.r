@@ -28,3 +28,16 @@ napovej_za_grade <- function(i){
   zacasna$Year <- 2016
   return(zacasna)
 }
+
+povp.za.plotly <- function(df){
+  za_plotly <- subset(filter(df,Year==2014),select=c(State, Code))
+  za_plotly$`x2014` <- (filter(df, Year==2014))$Wage
+  za_plotly$`x2012` <- (filter(df, Year==2012))$Wage
+  za_plotly$`x2010` <- (filter(df, Year==2010))$Wage
+  za_plotly$`x2008` <- (filter(df, Year==2008))$Wage
+  za_plotly$`x2006` <- (filter(df, Year==2006))$Wage
+  za_plotly$`x2004` <- (filter(df, Year==2004))$Wage
+  za_plotly$`x2002` <- (filter(df, Year==2002))$Wage
+  za_plotly$hover <- with(za_plotly,paste0(State))
+  return(za_plotly)
+}
