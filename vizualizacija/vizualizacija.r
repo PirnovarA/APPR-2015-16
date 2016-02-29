@@ -73,3 +73,5 @@ volitve_2012 <- ggplot() + geom_polygon(data = usa.cont,
   scale_fill_manual(values = c("blue", "red")) +
   guides(fill = guide_legend("Volitve 2012"))
 ###################################
+
+

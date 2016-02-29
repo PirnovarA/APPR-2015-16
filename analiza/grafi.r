@@ -21,10 +21,15 @@ financni_st_tidy_mean_2014 <- filter(financni_st_tidy_mean, Year == "2014")  #Iz
 financni_st_tidy_mean_2014_map <- merge(states_map, financni_st_tidy_mean_2014, by="region") #Zdruzena tabelca z tisto o podatkih o krajih -> pripravljenost na graf
 
 #Graf ZDA, barvno obarvani statesi, glede na povprecno placo 
-graf_financni_mean_2014 <- ggplot() + geom_polygon(data=financni_st_tidy_mean_2014_map, aes(x=long, y=lat, group = State, fill=financni_st_tidy_mean_2014_map$Wage),colour="white") +
-  scale_fill_continuous(low ="lightblue" , high = "darkblue",guide="colorbar") + 
-  labs(fill = "Mean financial wage in 2014" ,title = "Mean financial wage in 2014", x="", y="") +
-  theme(axis.text.x=element_blank(),axis.text.y=element_blank())
+# graf_financni_mean_2014 <- ggplot() + geom_polygon(data=financni_st_tidy_mean_2014_map, aes(x=long, y=lat, group = State, fill=financni_st_tidy_mean_2014_map$Wage),colour="white") +
+#   scale_fill_continuous(low ="lightblue" , high = "darkblue",guide="colorbar") + 
+#   labs(fill = "Mean financial wage in 2014" ,title = "Mean financial wage in 2014", x="", y="") +
+#   theme(axis.text.x=element_blank(),axis.text.y=element_blank())
+graf_financni_mean_2014 <- plot_ly(financni_st_tidy_mean_2014, z = `Wage`, text = State, locations = Code, type = 'choropleth',
+         locationmode = 'USA-states', color = `Wage`, colors = 'PuRd',
+         marker = list(line = meje), colorbar = list(title = "Wage")) %>%
+          layout(title = 'Wage for financial professions', geo = parametri)
+
 
 ### Zemljevid zveznih držav glede na realno plačo v 2014 ###################################
 #DF za plotly mapo
@@ -43,7 +48,7 @@ COL_state_fin_mean_for_plotly$hover <- with(COL_state_fin_mean_for_plotly,paste(
 graf_COL_state_fin_mean_plotly <- plot_ly(COL_state_fin_mean_for_plotly, z = `Real_FIN`, text = hover, locations = Code, type = 'choropleth',
                                         locationmode = 'USA-states', color = `Real_FIN`, colors = 'Purples',
                                         marker = list(line = meje), colorbar = list(title = "Real wage")) %>%
-  layout(title = 'Real pay for financial profesions', geo = parametri)
+  layout(title = 'Real pay for financial professions', geo = parametri)
 
 ### Graf spremembe višine plač v plačilnih razredih #########################################
 for(i in unique(national_grade$Pay_grade)){
@@ -65,7 +70,14 @@ financni_nat_drevo <- drevesa(financni_nat_2014)
 graf_financni_nat_drevo <- as.dendrogram(financni_nat_drevo)
 financni_nat_2014 <- obrezi(financni_nat_drevo,financni_nat_2014,n=3)
 
-#plot(graf_financni_nat_drevo, main="Finančni poklici v ZDA")
+### Zemljevid zv držav glede na njihov plačilni razred ##########
+COL_state_avg_plotly <- merge(COL_state_avg,iso_state, by="State")
+COL_state_avg_plotly$hover <- with(COL_state_avg,paste(State,"<br>","Real pay:",`Real_pay`))
+
+graf_COL_state_grade <- plot_ly(COL_state_avg_plotly, z = `Pay_grade`, text = hover, locations = Code, type = 'choropleth',
+ locationmode = 'USA-states', color = `Pay_grade`, colors = 'Dark2',
+ marker = list(line = meje), colorbar = list(title = "Grade"),showscale=FALSE) %>%
+  layout(title = 'States sorted by grade', geo = parametri)
 
 
 

@@ -1,7 +1,6 @@
 ---
 title: "Analiza plač v ZDA"
 author: "Andraž Pirnovar"
-date: "27 February 2016"
 output: html_document
 runtime: shiny
 ---
@@ -15,7 +14,7 @@ source("analiza/analiza.r", encoding = "UTF-8")
 
 ## Izbira teme
 
-Analiza plač v ZDA. Zanima me, kateri poklici zaslužijo največ, ter kateri najmanj. Zanima me tudi, v kateri zvezni državi je najugodneje živeti, glede na povprečni dohodek na prebivalca in povprečni dohodek na gospodinjstvo ter družino. Imel bom tudi primerjavo povprečnih plač v zveznih državah po letih.   
+Analiza plač v ZDA. Zanima me, kateri poklici zaslužijo največ, ter kateri najmanj. Zanima me tudi, v kateri zvezni državi je najugodneje živeti, glede na povprečni dohodek na prebivalca. Imel bom tudi primerjavo povprečnih plač v zveznih državah po letih.   
 
 ***
 
@@ -100,7 +99,7 @@ kable(head(per_capita_tidy))
 
 4. __Wage__: Povprečna plača v tisti zv. državi v tistem letu
 
-Spodnji graf prikazuje spremembo plače na prebivalca skozi leta. Opazimo, da se zaradi inflacije plače povečujejo, a da se nekatere odlepijo in naraščajo hitreje. Neenakost med zv. državami je večja, kot je bila včasih.
+Spodnji graf prikazuje spremembo plače na prebivalca skozi leta. Opazimo, da se zaradi inflacije vse plače povečujejo, a da se nekatere odlepijo in naraščajo hitreje. Neenakost med zv. državami je večja, kot je bila včasih.
 
 ```{r lineplot, echo=FALSE}
 renderPlot({
@@ -122,8 +121,9 @@ myReact1 <- reactive({
 ```
 
 
-Spodnji graf prikazuje spremembo povprečne plače glede na razne parametre. Rdeča debela črta prikazuje glajeno spremembo povprečne plače, glede na vse prebivalce ZDA, medtem ko modra črta prikazuje glajeno spremembo povprečne plače glede na povprečne plače v posameznih zveznih državah. Kot je razvidno, in pričakovano, je _District of Columbia (DC)_ zelo nad povprečjem, kar je posledica, da tam živijo v veliki večini politiki, lobisti ipd., kar povečuje standard.   
+Spodnji graf prikazuje spremembo povprečne plače glede na razne parametre. _Rdeča_ debela črta prikazuje glajeno spremembo povprečne plače, glede na vse prebivalce ZDA, medtem ko _modra_ črta prikazuje glajeno spremembo povprečne plače glede na povprečne plače v posameznih zveznih državah. Kot je razvidno, in pričakovano, je _District of Columbia (DC)_ zelo nad povprečjem, kar je posledica, da tam živijo v veliki večini politiki, lobisti ipd., kar povečuje standard.   
 Kar pa še lahko opazimo, je to, da očitno v revnejših zveznih državah živi manj ljudi kot v bogatejših, saj je modra krivulja pod rdečo.
+Tudi tukaj je opazno, da se plače večajo, opazimo pa še, kako so se plače po krizi začele zmanjševati, po letu 2010 pa že spet zviševati.
 
 ```{r povp_placa_graf, echo=FALSE}
 drzave <- aggregate(.~State, data=subset(povp_placa_state,select=c(State, Wage)),mean)
@@ -153,7 +153,7 @@ Na spodnjem zemljevidu je prikazano razmerje med posameznimi zveznimi državami 
 za_plotly <- povp.za.plotly(povp_placa_state)
 inputPanel(
   fluidRow(sliderInput("kdaj", label = "Leto:",
-              min = 2002, max = 2014, value = 2002, step = 2,sep="",animate=animationOptions(interval=5000,loop=FALSE))
+              min = 2002, max = 2014, value = 2002, step = 2,sep="",animate=animationOptions(interval=2000,loop=TRUE))
 ))
 myReact3 <- reactive({
   input$kdaj
@@ -169,7 +169,7 @@ renderPlotly({
 
 ```  
 
-Kar lahko vidimo, je to, da so najrevnejše države znotraj ZDA, ter proti jugu. To je logična posledica pomankanja naravnih virov, prav tako pa je možno opaziti korelacijo med politično afiliacijo (demokrati/republikanci) in povprečno plačo.
+Kar lahko vidimo, je to, da so najrevnejše države znotraj ZDA, ter proti jugu. To je logična posledica pomankanja naravnih virov, prav tako pa je možno opaziti korelacijo med politično afiliacijo (demokrati/republikanci) in povprečno plačo. Ta poteka v smer proti politični afiliaciji, saj so revnejše države v večini bolj naklonjene republikancom.
 
 ```{r volitve, echo=FALSE}
 volitve_2012
@@ -194,7 +194,7 @@ graf_national_fin_plotly
 
 ```  
 
-Kot je na zgornjem grafu zelo lepo vidno, je plača finančnih poklicev veliko višja, kot povprečna plača na nacionalni ravni. To je pričakovano, saj zahtevajo te poklici leta šolanja, bolje plačani od teh pa tudi dobro poznavanje matematike, kar je redka lastnost. So se pa plače, pričakovano, obnašale podobno kot tiste na nacionalni ravni, se pravi, da so doživele padec po krizi, vendar pa se sedaj hitreje večajo kot povprečna plača. To je tudi ponazorjeno s predikcijo za leto 2016 (za letošnje leto še ni podatkov, zato je nemogoče preveriti pravilnost napovedi). Verjetno napoved ni čisto točna, saj je kriza vplivala na višino plač, kar je lahko privedlo do nepravilnosti v napovedni krivulji.
+Kot je na zgornjem grafu zelo lepo vidno, je plača finančnih poklicev veliko višja, kot povprečna plača na nacionalni ravni. To je pričakovano, saj zahtevajo te poklici leta šolanja, bolje plačani od teh pa tudi dobro poznavanje matematike, kar je redka lastnost. So se pa plače, pričakovano, obnašale podobno kot tiste na nacionalni ravni, se pravi, da so doživele padec po krizi, vendar pa se sedaj hitreje večajo kot povprečna plača. To je tudi ponazorjeno s predikcijo za leto 2016 (za letošnje leto še ni podatkov, zato je nemogoče preveriti pravilnost napovedi). Verjetno napoved ni čisto točna, saj je kriza vplivala na višino in naraščanje plač, kar je lahko privedlo do nepravilnosti v napovedni krivulji.
 
 ```{r financni_placa, echo=FALSE}
 graf_financni_mean_2014
@@ -215,17 +215,18 @@ graf_COL_state_fin_mean_plotly
 ```  
 
 Kot lahko opazimo, ni nujno, da najvišja dolarska plača prinese najvišjo realno plačo. To je posledica dejstva, da višja nominalna plača s sabo pripelje tudi višji življenski standard. Prav tako pa lahko opazimo (s pomočjo plačilnih razredov, podrobneje razloženih kasneje), da plačilni razred finančnega poklica ni nujno enak povprečnemu za tisto državo.
-Iz grafa sodeč, je vzhodna obala ZDA bolj primerna za finančnike, sploh _Virginia_ in _North Carolina_. Presenetljivo pa je Texas visoko na lestvici. To je posledica tega, da je ena izmed večjih in najpomembnejših zveznih držav, ki pa ni ob obali, kar mu zniža ceno življenja.   
-Še ena koristna opazka, sploh za nas, pa je, da je v skoraj vseh zveznih državah realna plača finančnikov vsej dvakrat višja od povprečne.
+Iz grafa sodeč, je vzhodna obala ZDA bolj primerna za finančnike, sploh _Virginia_ in _North Carolina_. Nepresenetljivo pa je tudi _Texas_ visoko na lestvici. To je posledica tega, da je ena izmed večjih in najpomembnejših zveznih držav (2. največji BDP), ki pa ni ob obali, kar mu zniža ceno življenja.   
+Še ena koristna opazka, sploh za nas, pa je, da je v skoraj vseh zveznih državah realna plača finančnikov vsaj dvakrat višja od povprečne.
 
 ### Plačilni razredi
 
-Že zgoraj omenjeni plačilni razredi ponazarjajo razdeljenost poklicev in zveznih držav na določene skupine, glede na višino plač. Razdelitev je opravljena z vgrajenimi funkcijami v R-u, kjer prvo podatke spravimo v drevo s funkcijo ``hclust, to drevo pa nato "obrežemo", da dobimo toliko vej oz. skupin, kot jih rabimo. To je uporabno, če hočemo grupirati poklice za kasnejšo analizo, v praksi pa je to uporabno tudi z vidika dohodkovnih razredov in z njimi povezanimi prispevki.
+Že zgoraj omenjeni plačilni razredi ponazarjajo razdeljenost poklicev in zveznih držav na določene skupine, glede na višino plač. Razdelitev je opravljena z vgrajenimi funkcijami v R-u, kjer prvo podatke spravimo v drevo s funkcijo `hclust`, to drevo pa nato "obrežemo", da dobimo toliko vej oz. skupin, kot jih rabimo. To je uporabno, če hočemo grupirati poklice za kasnejšo analizo, v praksi pa je to uporabno tudi z vidika dohodkovnih razredov in z njimi povezanimi prispevki.
 
-Primer razdelitve na drevo lahko vidimo v spodnjem grafu, kjer sem poklice znotraj _finančnih poklicev_ razdelil na drevo.
+Primer razdelitve na drevo lahko vidimo v spodnjem grafu, kjer sem zv. države s pomočjo drevesa razdelil na razrede glede na njihovo realno plačo. Zelo opazno najbolj od vseh podatkov izstopajo _Hawaii_. Problem njih je, da kljub povprečni višini plače, imajo strošek življenja nesorazmerno višji (ponekod skoraj primerljiv z _New Yorkom_). Iz tega sledi, da imajo za velik delež nižjo realno plačo. Druga država, ki izstopa, pa je _Virginia_. Ta pa izstopa iz ravno obratnih razlogov, ima namreč najvišjo realno plačo, ki se kar opazno razlikuje od njene zasledovalke.
 
 ```{r financno_drevo, echo=FALSE}
-plot(graf_financni_nat_drevo, main="Finančni poklici v ZDA")
+#plot(graf_financni_nat_drevo, main="Finančni poklici v ZDA")
+plot(COL_state_avg_tree, main="Razvrstitev držav na razrede")
 ```  
 
 Plačo nacionalnih poklicev sem razdelil na 6 razredov, ki prikazujejo:
@@ -250,11 +251,18 @@ Spodaj je prikazan graf, kako so se spreminjale plače v plačilnih razredih sko
 graf_national_grade_plotly
 ``` 
 
-Kot vidimo, je urna plača v razredih dokaj konstanta, z izjemo kakšnih šokov, kot je naprimer gospodarska kriza. Ta se je bolj poznala pri nižjih razredih. Iz tega grafa je tudi lepo razviden razmak med najvišjim plačnim razredom ter ostalimi.
+Kot vidimo, je urna plača v razredih dokaj konstanta, z izjemo kakšnih šokov, kot je naprimer gospodarska kriza. Ta se je bolj poznala pri nižjih razredih. Iz tega grafa je tudi lepo razviden razmak med najvišjim plačnim razredom ter ostalimi, ki je ogromen in se bo samo še povečeval. Do sedaj smo videli, da so se _finančni poklici_ približevali 2. razredu, a napoved za prihodnjost pravi, da se bo rast finančnih poklicev, v primerjavi z 2. razredom malo upočasnila. najvišjo nominalno rast pa bo, pričakovano, doživel najvišji razred.
+
+
+Spodnji graf pa prikazuje še delitev zv. držav na razrede, glede na njihove realne plače. V nasprotju z mojimi predvidevanji, je boljše (v povprečju) živeti v notranjosti, kot na obali. To je verjetno posledica nižjega standarda (obalna mesta so dražja za živeti v njih), ponekod pa tudi višjih plač (Texas).
+
+```{r state_grade_graf, echo=FALSE}
+graf_COL_state_grade
+```
 
 ###Tabela poklicev
 
-Spodaj imamo tabelo poklicev, ki je pravzaprav interaktivna tabela `state`. V njej se nahajajo podatki o plačah v zveznih državah, poklicih itd. Brskanje po njej je interaktivno in omogoča uporabniku vpogled v podatke.
+Spodaj imamo tabelo poklicev, ki je pravzaprav interaktivna tabela `state`. V njej se nahajajo podatki o plačah v zveznih državah, poklicih itd. Brskanje po njej je interaktivno in omogoča uporabniku vpogled v podatke. 
 
 ```{r poklici, echo=FALSE}
 fluidPage(
@@ -300,5 +308,9 @@ output$table <- DT::renderDataTable(DT::datatable({
 ```  
 
 
+###Zaključek
 
+Projekt sem začel delati s predpostavko, da je v Ameriki plačna porazdelitev neenakomerno porazdeljena. S pomočjo analize sem ugotovil, da je to res. Povprečna plača je za leto 2014 `r filter(national, Occupation == "All Occupations", Year==2014)$Hourly_mean`$, kar pa je zelo manj kot plače najbolj plačanih poklicev (v katerih pa ni veliko prostih delovnih mest). Glede na to, da je veliko poklicev, ki imajo plačo nad povprečjem, iz tega sklepamo, da je tistih z manjšo plačo veliko več. To prav tako pokazujejo plačni razredi, pri katerih se najvišji razred opazno loči od ostalih.   
+A, ker smo finančni matematiki, imamo srečo, kajti vsi poklici, ki jih mi lahko opravljamo (in so namenjeni nam) so veliko nad povprečno plačo. Izbrani finančni poklici sodijo v večini med drugi in tretji razred, kar pomeni, spadamo pod visoki srednji razred oz nizki visoki. To je skladno z začetnimi predpostavkami, da je naš poklic zaželjen in dobro plačan.
 
+Kot pričakovano pa obstajajo tudi občutne razlike med zveznimi državami, sploh v realni plači. Za finančnega matematika bi se splačalo iti v _Virginio_, ki eno najvišjih realnih plač za finančne matematike. Velika razlika med povprečno realno plačo in našo realno plačo pa se opazi v _North Carolina_, kjer imamo finančni matematiki zelo visoko realno plačo v primerjavi z ZDA, medtem ko povprečna realna plača v tej zv. državi nizka. Seveda pa je za nas lahko privlačen tudi _Washington, DC_, ki poleg veliko višje nominalne plače ponuja tudi možnost spoznavanje vplivnih ljudi in posledičnega možnega izboljševanja finančnega stanja.
