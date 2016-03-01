@@ -1,7 +1,7 @@
 # 3. faza: Izdelava zemljevida
 source("lib/uvozi.zemljevid.r",encoding="UTF-8")
-# Uvozimo zemljevid.
-#Urejamo podatke, ustvarjamo zemljevide, na splosno, imamo se fajn (ha-ha)
+### Uvozimo zemljevid ###################
+#Urejamo podatke, ustvarjamo zemljevide
 state_tidy_mean <- filter(state_tidy, Type=="Hourly_mean")      #Samo povprecne place v tabelci
 povp_placa_state <- filter(state_tidy_mean, Occupation=="All Occupations")    #Za vsak state samo povprecno plačo
 

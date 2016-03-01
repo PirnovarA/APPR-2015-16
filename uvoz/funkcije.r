@@ -145,7 +145,7 @@ filtriraj_poklice <- function(st_poklicev){
   return(list(poklici_top,poklici_low))
 }
 #Filtriramo podatke tako, da imamo samo prej izbrane poklice
-buc.buc <- function(podatki, st_poklicev){
+top.low <- function(podatki, st_poklicev){
   poklici <- filtriraj_poklice(st_poklicev)
   poklici <- unlist(poklici)
   

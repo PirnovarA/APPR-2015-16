@@ -27,34 +27,11 @@ COL_state_avg <- filter(COL_state, Occupation=='All Occupations')
 #Kakšna je povprečna realna plača po statesih za poklice finančnih matematikov
 COL_state_fin <- filter(COL_state, Occupation %in% financni)
 COL_state_fin_mean <- subset(COL_state_fin,select=c(State, Hourly_mean, Real_pay))
-COL_state_fin_mean <- aggregate(. ~ State, data = COL_state_fin_mean, mean)
+COL_state_fin_mean <- aggregate(. ~ State, data = COL_state_fin_mean, mean)   #Izračunamo povprečje plače glede na state
 COL_state_fin_mean <- zaokrozi(COL_state_fin_mean,2)
 
-### Razrstitev plač v plačilne razrede ######################################################
-#Prvo uporabimo na vseh scale   (PS: napredovanje od zacetka, s for zanko cez vsa imena, namesto rocno ;) 
-# for(i in seq(2,15,2)){
-#   if(i<10){ 
-#     assign(paste0("national_200",i,"_norm"),scale(col.to.name(get(paste0("national_200",i)))))
-#     k <- kmeans(get(paste0("national_200",i,"_norm")),3,nstart = 1000)
-#     assign(paste0("k_200",i),k)
-#     assign("pomozna", get(paste0("national_200",i)))
-#     pomozna$Class <- factor(k$cluster)
-#     assign(paste0("national_200",i),pomozna)
-#   }else{  
-#     assign(paste0("national_20",i,"_norm"),scale(col.to.name(get(paste0("national_20",i)))))
-#     k <- kmeans(get(paste0("national_20",i,"_norm")),3,nstart = 1000)
-#     assign(paste0("k_20",i),k)
-#     assign("pomozna", get(paste0("national_20",i)))
-#     pomozna$Class <- factor(k$cluster)
-#     assign(paste0("national_20",i),pomozna)
-#   }
-#   rm(pomozna)
-#   rm(k)
-# }
-#Dodali smo tabelam national skupine, h katerim pasejo. Analiza bo graficna, ker se skupine spreminjajo
-#ob vsakem zagonu
 ### hclust ureditev v drevesa in skupine ###############################################
-#Uredimo v 6 razredov, ker je drevo, je high,medium,low, ki se delijo se na dva vsak
+#Uredimo v 6 razredov
 for(i in seq(2,15,2)){
   if(i<10){
     assign(paste0("national_200",i,"_tree"),drevesa(get(paste0("national_200",i))))
@@ -117,7 +94,7 @@ rm(zacasna)
 financni_st_tidy_mean <- filter(financni_st_tidy, Type %in% "Hourly_mean")
 financni_st_tidy_mean <- zaokrozi(aggregate(. ~ State + Year, data=financni_st_tidy_mean[c(-2,-4)], mean),2)  #Sedaj imamo povprecno placo financnih poklicev po letih in drzavah
 
-### Tabeli z poklici v zveznih državah ##########################################
+### Tabeli s poklici v zveznih državah ##########################################
 state <- merge(state, subset(national, select=c(Occupation,Year,Pay_grade)),by=c("Occupation","Year"))
 state <- dplyr::arrange(state,desc(Year),desc(Hourly_mean))
 

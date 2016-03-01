@@ -1,6 +1,6 @@
 ---
 title: "Analiza plač v ZDA"
-author: "Andraž Pirnovar"
+author: "Andraž Pirnovar (andraz.pirnovar@gmail.com)"
 output: html_document
 runtime: shiny
 ---
@@ -20,7 +20,7 @@ Analiza plač v ZDA. Zanima me, kateri poklici zaslužijo največ, ter kateri na
 
 ### Obdelava, uvoz in čiščenje podatkov
 
-Uvozil sem podatke z Ameriškega statističnega urada (http://www.bls.gov/bls/proghome.htm) v .CSV obliki. To sem ločil na prikaz urnih ter letnih plač ter število zaposlenih v posameznem poklicu.   
+Uvozil sem podatke z [Ameriškega statističnega urada](http://www.bls.gov/bls/proghome.htm) v .CSV obliki. To sem ločil na prikaz urnih ter letnih plač ter število zaposlenih v posameznem poklicu.   
 Druge podatke, o povprečnih plačah v zveznih državah, sem pridobil v obliki HTML in sicer iz Wikipedije in spletne strani infoplease.   
 Vse podane plače so v $.   
 
@@ -67,24 +67,6 @@ kable(head(state_tidy))
 5. __Wage__: Plača
 
 
-### Per_capita2
-
-Tabela `per_capita2` (dobljena iz Wikipedije v HTML) prikazuje primerjavo med zveznimi državami glede na zaslužek per capita, povprečnim dohodkom gospodinjstva in dohodkom družine, zraven pa so še podatki o št. prebivalcev v državi in številu gospodinjstev.  
-Te tabele nisem kaj preveč urejal, razen, da sem spremenil vrednosti v "numeric", odstranil simbole in vejice, ipd. in jo dal v obliko tidy data    
-
-
-```{r percapita2, echo=FALSE}
-kable(head(per_capita2_tidy))
-```
-
-1. __State__: V kateri zvezni državi gledamo
-
-2. __Population__: Število prebivalcev v tisti zvezni državi
-
-3. __Number__ of households: Število gospodinjstev
-
-4. __Wage__: Povprečna plača v zvezni državi
-
 ### Per_capita
 
 Tabela `per_capita` prikazuje, že spet, zvezne države, urejene po povprečnih plačah. A tokrat imamo plače za več različnih let, prirejene inflaciji. Tabelo sem prav tako dobil iz interneta, v obliki HTML. Sedaj je v obliki tidy data.   
@@ -99,7 +81,7 @@ kable(head(per_capita_tidy))
 
 4. __Wage__: Povprečna plača v tisti zv. državi v tistem letu
 
-Spodnji graf prikazuje spremembo plače na prebivalca skozi leta. Opazimo, da se zaradi inflacije vse plače povečujejo, a da se nekatere odlepijo in naraščajo hitreje. Neenakost med zv. državami je večja, kot je bila včasih.
+Spodnji graf prikazuje spremembo plače na prebivalca skozi leta. Opazimo, da se vse plače povečujejo, a da se nekatere odlepijo in naraščajo hitreje. Neenakost med zv. državami je večja, kot je bila včasih.
 
 ```{r lineplot, echo=FALSE}
 renderPlot({
@@ -191,7 +173,6 @@ Kot prvo me je zanimalo, kako se na nacionalni ravni razlikuje povprečna plača
 
 ```{r povp_placa_nat_fin, echo=FALSE}
 graf_national_fin_plotly
-
 ```  
 
 Kot je na zgornjem grafu zelo lepo vidno, je plača finančnih poklicev veliko višja, kot povprečna plača na nacionalni ravni. To je pričakovano, saj zahtevajo te poklici leta šolanja, bolje plačani od teh pa tudi dobro poznavanje matematike, kar je redka lastnost. So se pa plače, pričakovano, obnašale podobno kot tiste na nacionalni ravni, se pravi, da so doživele padec po krizi, vendar pa se sedaj hitreje večajo kot povprečna plača. To je tudi ponazorjeno s predikcijo za leto 2016 (za letošnje leto še ni podatkov, zato je nemogoče preveriti pravilnost napovedi). Verjetno napoved ni čisto točna, saj je kriza vplivala na višino in naraščanje plač, kar je lahko privedlo do nepravilnosti v napovedni krivulji.
@@ -211,7 +192,6 @@ Spodnji graf prikazuje razdelitev ZDA glede na realno plačo finančnih poklicev
 
 ```{r real_placa_fin_st, echo=FALSE}
 graf_COL_state_fin_mean_plotly
-
 ```  
 
 Kot lahko opazimo, ni nujno, da najvišja dolarska plača prinese najvišjo realno plačo. To je posledica dejstva, da višja nominalna plača s sabo pripelje tudi višji življenski standard. Prav tako pa lahko opazimo (s pomočjo plačilnih razredov, podrobneje razloženih kasneje), da plačilni razred finančnega poklica ni nujno enak povprečnemu za tisto državo.
@@ -225,23 +205,22 @@ Iz grafa sodeč, je vzhodna obala ZDA bolj primerna za finančnike, sploh _Virgi
 Primer razdelitve na drevo lahko vidimo v spodnjem grafu, kjer sem zv. države s pomočjo drevesa razdelil na razrede glede na njihovo realno plačo. Zelo opazno najbolj od vseh podatkov izstopajo _Hawaii_. Problem njih je, da kljub povprečni višini plače, imajo strošek življenja nesorazmerno višji (ponekod skoraj primerljiv z _New Yorkom_). Iz tega sledi, da imajo za velik delež nižjo realno plačo. Druga država, ki izstopa, pa je _Virginia_. Ta pa izstopa iz ravno obratnih razlogov, ima namreč najvišjo realno plačo, ki se kar opazno razlikuje od njene zasledovalke.
 
 ```{r financno_drevo, echo=FALSE}
-#plot(graf_financni_nat_drevo, main="Finančni poklici v ZDA")
 plot(COL_state_avg_tree, main="Razvrstitev držav na razrede")
 ```  
 
 Plačo nacionalnih poklicev sem razdelil na 6 razredov, ki prikazujejo:
 
-- __1__: Visoki visoki razred (najvišje plače)
+- __1__: Visoki razred (najvišje plače)
 
-- __2__: Nizki visoki razred (še vedno v visokem razredu, a nižje)
+- __2__: Visoki srednji razred (Visoke plače srednjega razreda)
 
-- __3__: Visoki srednji razred
+- __3__: Srednji razred
 
 - __4__: Nizki srednji razred
 
 - __5__: Visoki nižji razred
 
-- __6__: nizki nizki razred (najnižje plače)
+- __6__: Nizki nizki razred (najnižje plače)
 
 - __FIN__: Plače finančnih poklicov
 
@@ -251,7 +230,7 @@ Spodaj je prikazan graf, kako so se spreminjale plače v plačilnih razredih sko
 graf_national_grade_plotly
 ``` 
 
-Kot vidimo, je urna plača v razredih dokaj konstanta, z izjemo kakšnih šokov, kot je naprimer gospodarska kriza. Ta se je bolj poznala pri nižjih razredih. Iz tega grafa je tudi lepo razviden razmak med najvišjim plačnim razredom ter ostalimi, ki je ogromen in se bo samo še povečeval. Do sedaj smo videli, da so se _finančni poklici_ približevali 2. razredu, a napoved za prihodnjost pravi, da se bo rast finančnih poklicev, v primerjavi z 2. razredom malo upočasnila. najvišjo nominalno rast pa bo, pričakovano, doživel najvišji razred.
+Kot vidimo, je urna plača v razredih dokaj konstanta, z izjemo kakšnih šokov, kot je naprimer gospodarska kriza. Ta se je bolj poznala pri nižjih razredih. Iz tega grafa je tudi lepo razviden razmak med najvišjim plačnim razredom ter ostalimi, ki je ogromen in se bo samo še povečeval. Do sedaj smo videli, da so se _finančni poklici_ približevali 2. razredu, a napoved za prihodnjost pravi, da se bo rast finančnih poklicev, v primerjavi z 2. razredom malo upočasnila. Najvišjo nominalno rast pa bo, pričakovano, doživel najvišji razred.
 
 
 Spodnji graf pa prikazuje še delitev zv. držav na razrede, glede na njihove realne plače. V nasprotju z mojimi predvidevanji, je boljše (v povprečju) živeti v notranjosti, kot na obali. To je verjetno posledica nižjega standarda (obalna mesta so dražja za živeti v njih), ponekod pa tudi višjih plač (Texas).

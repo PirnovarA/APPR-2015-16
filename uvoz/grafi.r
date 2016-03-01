@@ -8,6 +8,6 @@ top_5 <- filter(per_capita_tidy, State %in% drzave)
 graf_top_5 <- ggplot(top_5, main="Growth of per capita income through the years") + aes(x=Year, y = Wage ,colour=State) +
   geom_line(aes(group=State)) + xlab("Year") + ylab("$ per capita") + geom_point() 
 ########################################################################################
-national_tidy1 <- buc.buc(national_tidy,5)
+national_tidy1 <- top.low(national_tidy,5)
 
 

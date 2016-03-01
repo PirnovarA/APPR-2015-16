@@ -6,20 +6,20 @@ col.to.name <- function(vhodni){
   try(vhodni$Total_employment <- NULL)
   return(vhodni)
 }
-
+#Funkcija spremeni data frame v drevo
 drevesa <- function(df,razdalja="euclidian", metoda="ward.D2"){
   df <- col.to.name(df)
   df_razd <- dist(df, method = razdalja)
   df_tree <- hclust(df_razd,method = metoda)
   return(df_tree)
 }
-
+#Drevo "obreže" oziroma glede na razdelitev v drevesu 
 obrezi <- function(drevo, izhodni="izhodni", n=6){
   obrezano <- cutree(drevo, k=n)
   izhodni$Pay_grade <- obrezano
   return(izhodni)
 }
-
+#Napove, kakšna bo povprečna plača razreda v letu 2016
 napovej_za_grade <- function(i){
   zacasna.lo <-loess(Hourly_mean ~ Year, filter(national_grade, Pay_grade %in% i ) ,control=loess.control(surface="direct"))
   Hourly_mean <- predict(zacasna.lo, data.frame(Year=2016))
@@ -28,7 +28,7 @@ napovej_za_grade <- function(i){
   zacasna$Year <- 2016
   return(zacasna)
 }
-
+#V data frame shrani hover, ki nam v plotly kaže podatke ob preletu miške
 povp.za.plotly <- function(df){
   za_plotly <- subset(filter(df,Year==2014),select=c(State, Code))
   za_plotly$`x2014` <- (filter(df, Year==2014))$Wage
